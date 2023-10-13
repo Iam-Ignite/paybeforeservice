@@ -1,0 +1,1 @@
+// This directory will contain application features respectively, for easier management - Bright
