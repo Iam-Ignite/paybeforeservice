@@ -1,15 +1,15 @@
-import './hero.css';
+import './home.css';
 
-import appleIcon from '../assets/apple.png'
-import playIcon from '../assets/playstore.png'
-import bolts from '../assets/bolts.png';
-import shields from '../assets/shield.png';
-import lock from '../assets/lock.png';
-import deviceMockup from '../assets/device-mockup.png';
-import eclipse from '../assets/Ellipse-cut.png';
-import fastPay from '../assets/fast-pay.png';
-import referal from '../assets/referal.png';
-import howbg from '../assets/howbg.png';
+import appleIcon from '../../assets/apple.png';
+import playIcon from '../../assets/playstore.png';
+import bolts from '../../assets/bolts.png';
+import shields from '../../assets/shield.png';
+import lock from '../../assets/lock.png';
+import deviceMockup from '../../assets/device-mockup.png';
+import eclipse from '../../assets/Ellipse-cut.png';
+import fastPay from '../../assets/fast-pay.png';
+import referal from '../../assets/referal.png';
+import howbg from '../../assets/howbg.png';
 
 import { AiFillCheckCircle, AiFillLinkedin } from "react-icons/ai";
 import { ImFacebook, ImLinkedin2, ImTwitter, ImInstagram } from "react-icons/im";
@@ -27,16 +27,14 @@ const WhyUsCard = ({icon, title, body}) => {
 
 
 
-
-
-const Hero = () => {
+const Home = () => {
   return (
     <div className='min-h-screen max-w-[1600px] mx-auto'>
-      <div className="hero px-[120px] bg-base">
+      {/* <div className="hero px-[120px] bg-base">
           <nav className='py-[30px] flex items-center justify-between'>
-              {/* Left side */}
+          
               <div className='flex flex-row items-center gap-20'>
-                  {/* Logo */}
+          
                   <h5 className='text-[28px] font-ui-bold text-primary'>SwiftSettle</h5>
                   <div>
                       <ul className='flex flex-row gap-5 text-[16px] text-body-text'>
@@ -46,7 +44,7 @@ const Hero = () => {
                       </ul>
                   </div>
               </div>
-        {/* right side */}
+        
           <div className='flex flex-row items-center gap-[20px] justify-between text-[16px] font-ui-semi'>
             <button className='py-[10px] text-primary'>Log in</button>
             <div className='w-[3px] h-[30px] bg-primary rounded-full'></div>
@@ -58,8 +56,7 @@ const Hero = () => {
           <div className="left-side w-[600px]">  
           <h1 className='text-4xl font-ui-bold text-[42px] leading-[54px]'>Simplified Payment Processing with an <span className='text-primary'>Escrow</span> Approach</h1>
             <p className='py-5 font-ui-regular text-[16px] leading-[28px] text-body-text'>Experience effortless payment processing through our innovative Escrow Approach. We simplify and secure transactions, ensuring peace of mind for both senders and receivers. Say goodbye to complexity and embrace a straightforward, secure way to conduct business</p>
-            {/* lint to stores buttons */}
-
+           
             <div className='flex justify-between w-fit gap-[16px]'>
               <a href="#">
                 <button className='flex p-[12.19px] gap-[10px] rounded-[10px] items-center text-white bg-[#0D0033]'>
@@ -94,7 +91,7 @@ const Hero = () => {
             </form>
           </div>
         </section>
-      </div>
+      </div> */}
 
       <section className='whyus px-[120px] py-[60px] bg-white'>
         <h2 className='font-ui-semi text-[28px] text-center mb-[60px] text-[#0D0033]'>Why choose us?</h2>
@@ -312,4 +309,4 @@ const Hero = () => {
   )
 } 
 
-export default Hero
+export default Home
