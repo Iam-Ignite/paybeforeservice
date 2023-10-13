@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'ui-regular';
+  src:url('/fonts/Proxima-Nova-Regular.otf');
+}
+
+@font-face {
+  font-family: 'ui-semi';
+  src:url('/fonts/Proxima-Nova-Semibold.otf');
+}
+
+@font-face {
+  font-family: 'ui-bold';
+  src:url("/fonts/Proxima-Nova-Bold.otf");
+}
