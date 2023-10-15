@@ -17,13 +17,15 @@ import { ImFacebook, ImLinkedin2, ImTwitter, ImInstagram } from "react-icons/im"
 
 
 const WhyUsCard = ({ icon, title, body }) => {
-  return <div className='max-w-[385px] p-[30px] rounded-[20px] border-ui-border'>
-    <div className='w-[46.67px] h-[45px]'>
-      <img src={icon} alt="icon" className='bg-cover w-full h-full object-contain' />
+  return (
+    <div className='max-w-[385px] p-[30px] rounded-[20px] border-ui-border self-stretch md:max-w-full'>
+      <div className='w-[46.67px] h-[45px]'>
+        <img src={icon} alt="icon" className='bg-cover w-full h-full object-contain' />
+      </div>
+      <h3 className='font-ui-semi text-[20px] my-[10px]'>{title}</h3>
+      <p className='font-ui-regular text-left text-[17px] leading-[20.71px] text-body-text'>{body}</p>
     </div>
-    <h3 className='font-ui-semi text-[20px] my-[10px]'>{title}</h3>
-    <p className='font-ui-regular text-left text-[17px] leading-[20.71px] text-body-text'>{body}</p>
-  </div>
+  )
 }
 
 const Home = () => {
@@ -35,12 +37,12 @@ const Home = () => {
 
   return (
     <div className='w-full min-h-screen'>
-      <div className="hero px-[120px] bg-base lg:bg-red-300">
-        <nav className='py-[35px] flex items-center justify-between gap-[97px]'>
-          <div>
+      <div className="hero px-[120px] bg-base sm:px-[20px]">
+        <nav className='py-[35px] flex items-center justify-between gap-[97px] lg:flex-col lg:gap-20'>
+          <div className='self-start'>
             <h5 className='text-[28px] font-ui-bold text-primary'>SwiftSettle</h5>
           </div>
-          <div className='flex flex-row justify-between flex-[2]'>
+          <div className='flex flex-row justify-between flex-[2] sm:hidden sm:w-full lg:w-full'>
             <div className='flex-[2]'>
               <ul className='flex flex-row gap-5 text-[16px] text-body-text font-ui-regular list-none transition-all ease-in-out h-full items-center'>
                 <li className={` w-fit ${activeNavLink === 'home' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('home')}><a href="#home" className='hover:text-primary'>Home</a></li>
@@ -56,35 +58,34 @@ const Home = () => {
           </div>
         </nav>
 
-        <section className="hero-section py-[60px] flex justify-between gap-[66px]">
-          <div className="left-side max-w-[589px] flex-[2]">
-            <h1 className='text-4xl font-ui-bold text-[42px] leading-[54px]'>Simplified Payment Processing with an <span className='text-primary'>Escrow</span> Approach</h1>
-            <p className='py-5 font-ui-regular text-[20px] leading-[28px] text-body-text'>Experience effortless payment processing through our innovative Escrow Approach. We simplify and secure transactions, ensuring peace of mind for both senders and receivers. Say goodbye to complexity and embrace a straightforward, secure way to conduct business</p>
+        <section className="hero-section py-[60px] flex justify-between gap-[66px] xl:flex-col xl:w-full">
+          <div className="left-side max-w-[589px] flex-[2] xl:flex-1 xl:min-w-full xl:items-center xl:text-center">
+            <h1 className='text-4xl font-ui-bold text-[42px] leading-[54px] md:text-left sm:text-center sm:w-full sm:text-[30px] sm:leading-[35px]'>Simplified Payment Processing with an <span className='text-primary'>Escrow</span> Approach</h1>
+            <p className='py-5 font-ui-regular text-[20px] leading-[28px] text-body-text md:text-left sm:text-[16px] sm:text-center'>Experience effortless payment processing through our innovative Escrow Approach. We simplify and secure transactions, ensuring peace of mind for both senders and receivers. Say goodbye to complexity and embrace a straightforward, secure way to conduct business.</p>
 
-            <div className='flex justify-between w-fit gap-[16px] items-end'>
-              <a href="#">
-                <button className='flex p-[12.19px] gap-[10px] rounded-[10px] items-center text-white bg-[#0D0033]'>
-                  <img src={appleIcon} alt="link to apple store" />
-                  <div className='flex items-start flex-col'>
-                    <small className='font-ui-bold text-[12px]'>Download on the</small>
-                    <h4 className='font-ui-bold'>App Store</h4>
-                  </div>
-                </button>
-              </a>
-              <a href="#">
-                <button className='flex py-[12.19px] px-[24px] gap-[10px] rounded-[10px] items-center text-white bg-[#0D0033]'>
-                  <img src={playIcon} alt="link to apple store" />
-                  <div className='flex items-start flex-col'>
-                    <small className='font-ui-bold text-[12px]'>Get it on</small>
-                    <h4 className='font-ui-bold'>Google Play</h4>
-                  </div>
-                </button>
-              </a>
+            <div className='flex justify-between w-fit gap-[16px] sm:flex-col sm:justify-center xl:justify-center xl:w-full'>
+
+              <button className='flex p-[12.19px] gap-[10px] rounded-[10px] items-center text-white bg-[#0D0033] sm:items-center sm:justify-center'>
+                <img src={appleIcon} alt="link to apple store" />
+                <div className='flex items-start flex-col sm:text-center'>
+                  <small className='font-ui-bold text-[12px]'>Download on the</small>
+                  <h4 className='font-ui-bold'>App Store</h4>
+                </div>
+              </button>
+
+              <button className='flex py-[12.19px] px-[24px] gap-[10px] rounded-[10px] items-center text-white bg-[#0D0033] sm:items-center sm:justify-center'>
+                <img src={playIcon} alt="link to apple store" />
+                <div className='flex items-start flex-col'>
+                  <small className='font-ui-bold text-[12px]'>Get it on</small>
+                  <h4 className='font-ui-bold'>Google Play</h4>
+                </div>
+              </button>
+
             </div>
           </div>
 
-          <div className="right-side self-center flex-[1] max-w-[545px]">
-            <form action="#" className=' bg-white rounded-[20px] px-[50px] py-[40px] border-ui-border border-border'>
+          <div className="right-side self-center flex-[1] max-w-[545px] sm:w-full lg:flex-1 xl:w-[545px]">
+            <form action="#" className=' bg-white rounded-[20px] px-[50px] py-[40px] sm:px-[15px] border-ui-border border-border'>
               <h2 className='mb-[30px] text-center font-ui-semi text-[16px]'>Enter Transaction ID</h2>
               <div className='flex flex-col gap-5'>
                 <div className='border-ui-border rounded-[10px] px-5 py-4 bg-base'>
@@ -97,18 +98,18 @@ const Home = () => {
         </section>
       </div>
 
-      <section className='whyus px-[120px] py-[60px] bg-white'>
+      <section className='whyus px-[120px] sm:px-[20px] py-[60px]'>
         <h2 className='font-ui-semi text-[28px] text-center mb-[60px] text-[#0D0033]'>Why choose us?</h2>
-        <div className='flex flex-row gap-[20px] justify-center items-start'>
+        <div className='flex flex-row gap-[20px] justify-center items-start lg:grid lg:grid-cols-2 md:grid-cols-1'>
           <WhyUsCard icon={bolts} title={"Speed"} body={"Say goodbye to waiting. With us, your money transfers are lightning-fast, ensuring your funds reach their destination in no time."} />
           <WhyUsCard icon={shields} title={"Security"} body={"We prioritize your financial well-being. Our advanced security measures guarantee your money and personal information are safe and sound."} />
           <WhyUsCard icon={lock} title={"Secured Transactions"} body={"With our escrow service, your payments are held securely until both parties fulfill their obligations, ensuring a safe and fair exchange."} />
         </div>
       </section>
 
-      <section className='px-[120px] relative'>
+      <section className='px-[120px] sm:px-[20px] relative'>
         {/* wrapper div */}
-        <div className='flex gap-[70px] justify-between py-[104px]'>
+        <div className='flex gap-[70px] justify-between py-[104px] lg:flex-col lg:flex-col-reverse'>
           <div className='flex-1'>
             <div>
               <h5 className='font-ui-bold text-[20px] text-primary mb-5'>Escrow</h5>
@@ -135,18 +136,18 @@ const Home = () => {
             </div>
           </div>
           {/* wrapper div ends here */}
-          <div className='flex-1'>
+          <div className='flex-1 lg:self-center'>
             <img src={deviceMockup} alt="mockup" className='max-w-full' />
-            <img src={eclipse} alt="background" className='absolute top-0 right-0 -z-10' />
+            <img src={eclipse} alt="background" className='absolute top-0 right-0 -z-10 lg:hidden' />
           </div>
         </div>
       </section>
 
 
-      <section className='px-[120px] relative'>
+      <section className='px-[120px] sm:px-[20px] relative'>
         {/* wrapper div */}
-        <div className='flex gap-[70px] justify-between py-[104px]'>
-          <div className='flex-1'>
+        <div className='flex gap-[70px] justify-between py-[104px] lg:flex-col'>
+          <div className='flex-1 lg:self-center'>
             <img src={fastPay} alt="mockup" className='max-w-full' />
           </div>
           <div className='flex-1'>
@@ -185,9 +186,9 @@ const Home = () => {
         </div>
       </section>
 
-      <section className='px-[120px] relative'>
+      <section className='px-[120px] sm:px-[20px] relative'>
         {/* wrapper div */}
-        <div className='flex gap-[70px] justify-between py-[104px]'>
+        <div className='flex gap-[70px] justify-between py-[104px] lg:flex-col lg:flex-col-reverse'>
           <div className='flex-1'>
             <div>
               <h5 className='font-ui-bold text-[20px] text-primary mb-5'>Referrals</h5>
@@ -205,16 +206,16 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <div className='flex-1'>
+          <div className='flex-1 lg:self-center'>
             <img src={referal} alt="mockup" className='max-w-full' />
           </div>
         </div>
       </section>
 
-      <section className="how bg-primary py-[61px] px-[139px] relative overflow-hidden">
+      <section className="how bg-primary py-[61px] px-[139px] sm:px-[20px] relative overflow-hidden">
         <div className='how__overlay'></div>
         <h2 className='mb-[53px] font-ui-semi text-[32px] text-center text-white'>How it works</h2>
-        <div className='flex gap-5 text-center'>
+        <div className='flex gap-5 sm:gap-[50px] text-center md:flex-col'>
           <div className='text-white flex-1 justify-items-center items-center flex flex-col'>
             <div className='w-[120px] h-[120px] border-[3px] border-white rounded-full text-center leading-[120px] mb-[20px]'>
               <span className='font-ui-semi text-[32px]'>01</span>
@@ -238,24 +239,24 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className='py-[90px] w-full bg-[#FAFAFA] flex justify-center items-center'>
-        <div className='max-w-[733px] w-[60%]'>
-          <h2 className='mb-[20px] font-ui-semi text-[32px] text-center'>Subscribe To Our News Letter</h2>
-          <h4 className='text-center font-ui-regular text-[24px] text-body-text mb-[30px]'>Subscribe To Our News Letter For more Update</h4>
-          <form className='flex text-[17px]'>
-            <div className='border-ui-border  bg-white border-border flex-1 rounded-l-3xl px-[32px] py-[16px]'>
+      <section className='py-[90px] w-full bg-[#FAFAFA] flex justify-center items-center sm:px-5'>
+        <div className='max-w-[733px] w-[60%] sm:w-full'>
+          <h2 className='mb-[20px] font-ui-semi text-[32px] text-center sm:text-[24px]'>Subscribe To Our News Letter</h2>
+          <h4 className='text-center font-ui-regular text-[24px] text-body-text mb-[30px] sm:text-[16px]'>Subscribe To Our News Letter For more Update</h4>
+          <form className='flex text-[17px] sm:text-[16px]'>
+            <div className='border-ui-border  bg-white border-border flex-1 rounded-l-3xl px-[32px] sm:px-[16px] py-[16px]'>
               <input type="email" name="email" placeholder='Your email address' className='bg-inherit flex-1 w-full outline-none border-0 text-body-text font-ui-regular' />
             </div>
-            <button className='bg-primary w-[133px] rounded-r-3xl text-white font-ui-semi'>Subscribe</button>
+            <button className='bg-primary w-[133px] sm:w-[100px] rounded-r-3xl text-white font-ui-semi'>Subscribe</button>
           </form>
         </div>
       </section>
       <footer className='bg-primary'>
-        <div className='px-[120px] w-full pt-[60px] pb-[100px] gap-[80px] flex flex-row justify-start'>
+        <div className='px-[120px] sm:px-5 w-full pt-[60px] pb-[100px] gap-[80px] flex flex-row justify-start lg:flex-col lg:flex-col-reverse'>
           <div className='left flex-1 max-w-[420px]'>
-            <h2 className='text-[32px] font-ui-bold text-white  mb-[10px]'>SwiftSettle</h2>
-            <p className='text-[17px] text-white leading-[23px] font-ui-regular mb-[20px]'>Explore a simplified approach to effortless money transfers with Swiftsettle. Enjoy fast, secure transactions via personalized payment links. Begin now for a seamless journey!</p>
-            <div className='icons flex w-fit gap-5'>
+            <h2 className='text-[32px] font-ui-bold text-white  mb-[10px] sm:text-center'>SwiftSettle</h2>
+            <p className='text-[17px] text-white leading-[23px] font-ui-regular mb-[20px] sm:text-center'>Explore a simplified approach to effortless money transfers with Swiftsettle. Enjoy fast, secure transactions via personalized payment links. Begin now for a seamless journey!</p>
+            <div className='icons flex w-fit gap-5 sm:justify-center sm:items-center sm:w-full'>
               <a href="#" className='text-center'>
                 <div className='p-[0.6px] rounded-full bg-white w-[30px] h-[30px] flex items-center justify-center'>
                   <ImLinkedin2 color='#6E3EFF' />
@@ -278,11 +279,11 @@ const Home = () => {
               </a>
             </div>
           </div>
-          <div className='right flex-[2]'>
-            <ul className='flex gap-[80px] font-ui-regular text-[16px] text-white list-none'>
+          <div className='right flex-[2] w-fit sm:flex-1 sm:w-full'>
+            <ul className='flex gap-[80px] font-ui-regular text-[16px] text-white list-none sm:flex-col sm:text-center'>
               <li>
                 <h3 className='font-ui-semi text-[20px] text-white mb-5'>Features</h3>
-                <div className='flex flex-col gap-[10px]'>
+                <div className='flex flex-col gap-[10px] sm:gap-5'>
                   <a href="#">Escrow</a>
                   <a href="#">Fast Payment</a>
                   <a href="#">Referrals</a>
@@ -290,7 +291,7 @@ const Home = () => {
               </li>
               <li>
                 <h3 className='font-ui-semi text-[20px] text-white mb-5'>About</h3>
-                <div className='flex flex-col gap-[10px]'>
+                <div className='flex flex-col gap-[10px] sm:gap-5'>
                   <a href="#">About</a>
                   <a href="#">FAQs</a>
                   <a href="#">Privacy Policy</a>
@@ -298,7 +299,7 @@ const Home = () => {
               </li>
               <li>
                 <h3 className='font-ui-semi text-[20px] text-white mb-5'>Contact Us</h3>
-                <div className='flex flex-col gap-[10px]'>
+                <div className='flex flex-col gap-[10px] sm:gap-5'>
                   <a href="#">Lagos, Nigeria</a>
                   <a href="#">Email: hello@swiftsettle.com</a>
                   <a href="#">Phone: +2347089234543</a>
