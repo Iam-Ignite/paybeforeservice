@@ -12,53 +12,78 @@ import eclipse from '../../assets/Ellipse-cut.png';
 import fastPay from '../../assets/fast-pay.png';
 import referal from '../../assets/referal.png';
 
-import { AiFillCheckCircle } from "react-icons/ai";
+import { AiFillCheckCircle, AiOutlineClose } from "react-icons/ai";
 import { ImFacebook, ImLinkedin2, ImTwitter, ImInstagram } from "react-icons/im";
+import { RxHamburgerMenu } from 'react-icons/rx';
+
+import { WhyUsCard } from './components';
 
 
-const WhyUsCard = ({ icon, title, body }) => {
-  return (
-    <div className='max-w-[385px] p-[30px] rounded-[20px] border-ui-border self-stretch md:max-w-full'>
-      <div className='w-[46.67px] h-[45px]'>
-        <img src={icon} alt="icon" className='bg-cover w-full h-full object-contain' />
-      </div>
-      <h3 className='font-ui-semi text-[20px] my-[10px]'>{title}</h3>
-      <p className='font-ui-regular text-left text-[17px] leading-[20.71px] text-body-text'>{body}</p>
-    </div>
-  )
-}
 
 const Home = () => {
   const [activeNavLink, setActiveNavLink] = useState("home");
+  const [hideModel, setHideModal] = useState(false);
 
   const handleNavClick = (link) => {
     setActiveNavLink(link);
+    setHideModal(!hideModel);
+  }
+
+  const handleHideModal = () => {
+    setHideModal(!hideModel);
   }
 
   return (
     <div className='w-full min-h-screen'>
-      <div className="hero px-[120px] bg-base sm:px-[20px]">
-        <nav className='py-[35px] flex items-center justify-between gap-[97px] lg:flex-col lg:gap-20'>
-          <div className='self-start'>
+      <div className="hero px-[120px] bg-base sm:px-[20px] relative">
+        <nav className={`py-[35px] w-full ${!hideModel ? 'sm:fixed sm:left-0  sm:px-5 sm:z-50 sm:h-screen sm:bg-[rgba(0,0,0,0.75)]' : null} flex items-center justify-between sm:justify-center gap-[97px] sm:gap-5 sm:py-[30px] lg:flex-col lg:gap-20`}>
+          <div className='self-start sm:px-5 sm:fixed sm:left-0 sm:z-50 sm:top-0 sm:h-[10vh] sm:bg-white sm:flex sm:justify-between items-center sm:w-full'>
             <h5 className='text-[28px] font-ui-bold text-primary'>SwiftSettle</h5>
+            <div className='hidden p-2 border-ui-border rounded-lg sm:block ease-in-out transition-all' onClick={handleHideModal}>
+              {hideModel ? <RxHamburgerMenu /> : <AiOutlineClose />}
+            </div>
           </div>
-          <div className='flex flex-row justify-between flex-[2] sm:hidden sm:w-full lg:w-full'>
-            <div className='flex-[2]'>
+          <div className='flex flex-row items-center justify-between sm:hidden flex-[2] sm:w-full lg:w-full'>
+            <div className='flex-[2] sm:hidden'>
               <ul className='flex flex-row gap-5 text-[16px] text-body-text font-ui-regular list-none transition-all ease-in-out h-full items-center'>
-                <li className={` w-fit ${activeNavLink === 'home' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('home')}><a href="#home" className='hover:text-primary'>Home</a></li>
-                <li className={` w-fit ${activeNavLink === 'about' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('about')}><a href="#about-us" className='hover:text-primary'>About us</a></li>
-                <li className={` w-fit ${activeNavLink === 'faq' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('faq')}><a href="#faq" className='hover:text-primary'>Faq</a></li>
+                <a href="#home" className='hover:text-primary'>
+                  <li className={` w-fit ${activeNavLink === 'home' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('home')}>Home</li>
+                </a>
+                <a href="#about-us" className='hover:text-primary'>
+                  <li className={` w-fit ${activeNavLink === 'about' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('about')}>About us</li>
+                </a>
+                <a href="#faq" className='hover:text-primary'>
+                  <li className={` w-fit ${activeNavLink === 'faq' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('faq')}>Faq</li>
+                </a>
               </ul>
             </div>
-            <div className='flex flex-row items-center gap-[20px] justify-between text-[16px] font-ui-semi'>
+            <div className='flex flex-row items-center gap-[20px] justify-between text-[16px] font-ui-semi sm:hidden'>
               <button className='py-[10px] text-primary'>Log in</button>
               <div className='w-[3px] h-[30px] bg-primary rounded-full'></div>
               <button className=' bg-primary px-[20px] py-[10px] rounded-[20000px] text-white'>Signup</button>
             </div>
           </div>
+          {/* mobile  navigation*/}
+          <div className={`hidden h-fit ${hideModel ? 'hidden' : 'sm:flex flex-col'} border-ui-border rounded-lg bg-white justify-between px-5 py-5 sm:w-full lg:w-full`}>
+            <div className='mb-[50px]'>
+              <ul className='flex flex-col gap-5 text-[16px] text-body-text font-ui-regular list-none transition-all ease-in-out h-full items-center text-center'>
+                <a href="#home" className='hover:text-primary w-full' onClick={() => handleNavClick('home')}>
+                  <li className={` w-full py-4 ${activeNavLink === 'home' ? 'font-ui-semi text-primary' : ''}`}>Home</li></a>
+                <a href="#about-us" className='hover:text-primary w-full'>
+                  <li className={`w-full py-4 ${activeNavLink === 'about' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('about')}>About us</li></a>
+                <a href="#faq" className='hover:text-primary  w-full'>
+                  <li className={`w-full py-4 ${activeNavLink === 'faq' ? 'font-ui-semi text-primary' : ''}`} onClick={() => handleNavClick('faq')}>Faq</li></a>
+              </ul>
+            </div>
+            <div className='flex flex-col items-center gap-[8px] justify-between text-[16px] font-ui-semi'>
+              <button className='py-[15px] text-primary border-ui-border rounded-[5px] w-full'>Log in</button>
+              <div className='w-[3px] h-[30px] bg-primary rounded-none rotate-90'></div>
+              <button className=' bg-primary py-[15px] rounded-[5px] w-full text-white'>Signup</button>
+            </div>
+          </div>
         </nav>
 
-        <section className="hero-section py-[60px] flex justify-between gap-[66px] xl:flex-col xl:w-full">
+        <section className="hero-section py-[60px] flex justify-between gap-[66px] sm:mt-[50px] sm:py-0 xl:flex-col xl:w-full">
           <div className="left-side max-w-[589px] flex-[2] xl:flex-1 xl:min-w-full xl:items-center xl:text-center">
             <h1 className='text-4xl font-ui-bold text-[42px] leading-[54px] md:text-left sm:text-center sm:w-full sm:text-[30px] sm:leading-[35px]'>Simplified Payment Processing with an <span className='text-primary'>Escrow</span> Approach</h1>
             <p className='py-5 font-ui-regular text-[20px] leading-[28px] text-body-text md:text-left sm:text-[16px] sm:text-center'>Experience effortless payment processing through our innovative Escrow Approach. We simplify and secure transactions, ensuring peace of mind for both senders and receivers. Say goodbye to complexity and embrace a straightforward, secure way to conduct business.</p>
@@ -212,33 +237,40 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="how bg-primary py-[61px] px-[139px] sm:px-[20px] relative overflow-hidden">
+      <section className="how bg-primary py-[61px] px-[120px] md:px-[100px] sm:px-[20px] relative overflow-hidden">
         <div className='how__overlay'></div>
         <h2 className='mb-[53px] font-ui-semi text-[32px] text-center text-white'>How it works</h2>
-        <div className='flex gap-5 sm:gap-[50px] text-center md:flex-col'>
+        <div className='flex gap-5 sm:gap-[50px] text-center items-stretch md:text-left md:flex-col sm:text-center'>
           <div className='text-white flex-1 justify-items-center items-center flex flex-col'>
             <div className='w-[120px] h-[120px] border-[3px] border-white rounded-full text-center leading-[120px] mb-[20px]'>
               <span className='font-ui-semi text-[32px]'>01</span>
             </div>
-            <h3 className='font-ui-semi text-[24px] mb-[10px]'>Create account</h3>
-            <p className='text-[16px] text-center font-ui-regular leading-[21px]'>Register an account with us today. Setting up your swiftsettle takes less than a minute.</p>
+            <h3 className='font-ui-semi text-[24px] mb-[10px] text-center'>Create account</h3>
+            <div className='items-end flex flex-1'>
+              <p className='text-[16px] text-center font-ui-regular leading-[21px] md-text-[50px]'>Register an account with us today. Setting up your swiftsettle takes less than a minute.</p>
+            </div>
           </div>
           <div className='text-white flex-1 justify-items-center items-center flex flex-col'>
             <div className='w-[120px] h-[120px] border-[3px] border-white rounded-full text-center leading-[120px] mb-[20px]'>
               <span className='font-ui-semi text-[32px]'>02</span>
             </div>
-            <h3 className='font-ui-semi text-[24px] mb-[10px]'>Create a Payment Link or ID</h3>
-            <p className='text-[16px] text-center font-ui-regular leading-[21px]'>Create a personalized payment link for your transaction. Specify the amount, recipient, and any additional details. </p>
+            <h3 className='font-ui-semi text-[24px] mb-[10px] flex-[3] '>Create a Payment Link or ID</h3>
+            <div className='items-end flex flex-1'>
+              <p className='text-[16px] text-center font-ui-regular leading-[21px]'>Create a personalized payment link for your transaction. Specify the amount, recipient, and any additional details. </p>
+            </div>
           </div>
           <div className='text-white flex-1 justify-items-center items-center flex flex-col'>
             <div className='w-[120px] h-[120px] border-[3px] border-white rounded-full text-center leading-[120px] mb-[20px]'>
               <span className='font-ui-semi text-[32px]'>03</span>
             </div>
             <h3 className='font-ui-semi text-[24px] mb-[10px]'>Send Money Securely</h3>
-            <p className='text-[16px] text-center font-ui-regular leading-[21px]'>Ensure safe transactions with our robust security measures. Your money is protected every step of the way. </p>
+            <div className='items-end flex flex-1'>
+              <p className='text-[16px] text-center font-ui-regular leading-[21px]'>Ensure safe transactions with our robust security measures. Your money is protected every step of the way.</p>
+            </div>
           </div>
         </div>
       </section>
+
       <section className='py-[90px] w-full bg-[#FAFAFA] flex justify-center items-center sm:px-5'>
         <div className='max-w-[733px] w-[60%] sm:w-full'>
           <h2 className='mb-[20px] font-ui-semi text-[32px] text-center sm:text-[24px]'>Subscribe To Our News Letter</h2>
