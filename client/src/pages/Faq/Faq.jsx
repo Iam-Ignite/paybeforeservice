@@ -1,6 +1,6 @@
 const Faq = () => {
     return (
-        <section>
+        <section className='sm:mt-[10vh]'>
             <div>
                 <h1>Frequently Asked Questions (FAQs)</h1>
             </div>
