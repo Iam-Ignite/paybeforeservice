@@ -1,1 +1,0 @@
-// This directory will contain application servieces or third party integrations - Bright

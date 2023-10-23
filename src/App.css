@@ -1,21 +1,22 @@
 @font-face {
-  font-family: 'Proxima Nova';
-  src: local('Proxima Nova'), url('/fonts/Proxima Nova Reg.otf') format('truetype');
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"),
+    url("/fonts/Proxima Nova Reg.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Proxima Nova';
-  src: local('Proxima Nova-Bold'), url('/fonts/Proxima-Nova-Bold.otf') format('truetype');
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova-Bold"),
+    url("/fonts/Proxima-Nova-Bold.otf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 body {
-  font-family: 'YourFont', sans-serif; /* Use 'YourFont' for the entire body */
+  font-family: "YourFont", sans-serif; /* Use 'YourFont' for the entire body */
 }
-
 
 html {
   box-sizing: border-box;
@@ -25,11 +26,22 @@ html {
   margin-right: auto;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
   margin: 0;
   padding: 0;
   font-weight: normal;
@@ -37,7 +49,8 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul {
   font-family: Proxima Nova;
 }
 
-ol, ul {
+ol,
+ul {
   list-style: none;
 }
 
@@ -78,7 +91,7 @@ img {
   font-size: 12px;
   color: #555;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .radio-button__custom {
@@ -90,22 +103,21 @@ img {
   height: 20px;
   border-radius: 50%;
   border: 2px solid #555;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .radio-button__input:checked + .radio-button__label .radio-button__custom {
   transform: translateY(-50%) scale(0.9);
-  border: 5px solid #6E3EFF;
-  color: #6E3EFF;
+  border: 5px solid #6e3eff;
+  color: #6e3eff;
 }
 
 .radio-button__input:checked + .radio-button__label {
-  color: #6E3EFF;
+  color: #6e3eff;
 }
 
 .radio-button__label:hover .radio-button__custom {
   transform: translateY(-50%) scale(1.2);
-  border-color: #6E3EFF;
-  box-shadow: 0 0 10px #6E3EFF80;
+  border-color: #6e3eff;
+  box-shadow: 0 0 10px #6e3eff80;
 }
-

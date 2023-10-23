@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import Layout from '../components/Dashboard/Layout';
+import { useState, useEffect } from "react";
+import Layout from "../components/Dashboard/Layout";
 
 export default function Protected({ component: Component }) {
   const [isVerified, setIsVerified] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('isLoggedIn');
+    const token = localStorage.getItem("isLoggedIn");
 
     const verifyToken = () => {
       // You can use your preferred JWT library to verify the token

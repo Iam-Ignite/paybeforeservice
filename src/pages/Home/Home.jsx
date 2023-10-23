@@ -14,9 +14,6 @@ import {
 import { Hero, Features } from "./components";
 
 const Home = () => {
-
-
-  
   return (
     <>
       <Navigation />
