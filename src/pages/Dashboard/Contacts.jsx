@@ -4,7 +4,7 @@
 
 export default function Contacts() {
 	return (
-		<div className='flex flex-col p-14 gap-2 px-28'>
+		<div className='flex flex-col p-14 gap-2 px-28 md:px-8'>
 			<h2 className='text-lg font-semibold text-[#6E3EFF]'>
 				Contact Swiftsettle
 			</h2>
