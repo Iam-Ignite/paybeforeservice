@@ -55,7 +55,7 @@ export default function PaymentModal({
 				className={`${
 					!paymentModal ? 'hidden' : 'flex'
 				} absolute w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 `}>
-				<div className='h-auto flex flex-col justify-center items-center w-1/3 bg-white relative p-5 rounded-md'>
+				<div className='h-auto flex flex-col justify-center items-center w-1/3 md:w-full md:mx-2 bg-white relative p-5 rounded-md'>
 					<svg
 						onClick={() => setPaymentModal(!true)}
 						className='w-3 h-3 absolute right-8 top-6'
