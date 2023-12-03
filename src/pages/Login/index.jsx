@@ -67,7 +67,7 @@ const Login = () => {
 	};
 
 	return (
-		<>
+		<div className='mx-5'>
 			<Navigation />
 			<div className='my-5'>
 				<h2 className='text-primary text-[24px] font-ui-bold text-center '>
@@ -114,7 +114,7 @@ const Login = () => {
 					{!loading ? 'Login' : 'Loading ...'}
 				</button>{' '}
 			</Container>
-		</>
+		</div>
 	);
 };
 

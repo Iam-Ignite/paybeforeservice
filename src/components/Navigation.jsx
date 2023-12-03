@@ -131,13 +131,13 @@ const Navigation = () => {
 							</ul>
 						</div>
 						<div className='flex flex-col items-center gap-[8px] justify-between text-[16px] font-ui-semi'>
-							<button className='py-[15px] text-primary border-ui-border rounded-[5px] w-full'>
+							<Link to="/login" className='py-[15px] text-center text-primary border-ui-border rounded-[5px] w-full'>
 								Log in
-							</button>
+							</Link>
 							<div className='w-[3px] h-[30px] bg-primary rounded-none rotate-90'></div>
-							<button className=' bg-primary py-[15px] rounded-[5px] w-full text-white'>
+							<Link to='/signup' className=' bg-primary py-[15px] text-center rounded-[5px] w-full text-white'>
 								Signup
-							</button>
+							</Link>
 						</div>
 					</div>
 				</nav>
