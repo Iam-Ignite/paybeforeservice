@@ -1,0 +1,29 @@
+.otp :first-child {
+    border-top-left-radius: 200px;
+    border-bottom-left-radius: 200px;
+}
+
+.otp :last-child {
+    border-top-right-radius: 200px;
+    border-bottom-right-radius: 200px;
+}
+
+.otp-input {
+    border-radius: 10px;
+    border: 1px solid #DADADA;
+    outline-color: #6E3EFF;
+}
+
+.otp {
+    font-weight: bold;
+}
+
+.otp {
+    @media (max-width: 640px) {
+        gap: 10px !important;
+    }
+
+    @media (max-width: 320px) {
+        gap: 3px !important;
+    }
+}
