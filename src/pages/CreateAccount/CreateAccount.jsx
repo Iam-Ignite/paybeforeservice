@@ -16,25 +16,24 @@ import {
 } from "./components";
 import { Navigation } from "../../components";
 
-const displayRegisterStep = (step = 1, setStep ) => {
-
+const displayRegisterStep = (step = 1, setStep) => {
   if (step === 2) {
-    return <EnterOtp  setStep={setStep}/>;
+    return <EnterOtp setStep={setStep} />;
   }
   if (step === 1) {
-    return <EnterEmail  setStep={setStep}/>;
+    return <EnterEmail setStep={setStep} />;
   }
   if (step === 6) {
-    return <EnterPassword  setStep={setStep}/>;
+    return <EnterPassword setStep={setStep} />;
   }
   if (step === 3) {
-    return <EnterUserName  setStep={setStep}/>;
+    return <EnterUserName setStep={setStep} />;
   }
   if (step === 4) {
-    return <EnterDOB  setStep={setStep}/>;
+    return <EnterDOB setStep={setStep} />;
   }
-  if (step == 5 ) {
-    return <EnterGender  setStep={setStep}/>;
+  if (step == 5) {
+    return <EnterGender setStep={setStep} />;
   }
   // if (step === 7) {
   //   return <AllowLocation   setStep={setStep}/>;

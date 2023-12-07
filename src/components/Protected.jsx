@@ -7,6 +7,7 @@ export default function Protected({ component: Component }) {
 
   useEffect(() => {
     const token = localStorage.getItem("isLoggedIn");
+    const token = localStorage.getItem("isLoggedIn");
 
     const verifyToken = () => {
       // You can use your preferred JWT library to verify the token
