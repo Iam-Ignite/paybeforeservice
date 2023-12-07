@@ -24,6 +24,7 @@ function TransTable() {
 
       if (response.status >= 200 && response.status < 300) {
         // Process the response data as needed
+        console.log(response.data);
         setData(response.data.data);
       } else {
         console.log("Failed to fetch transaction data");
@@ -52,7 +53,7 @@ function TransTable() {
   return (
     <div className="relative">
       <div className="m-5 border rounded-2xl flex justify-center overflow-hidden h-96 bg-white px-4 md:px-0 py-2">
-        {(!data?.length === 0) | null ? (
+        {data?.length !== 0 ? (
           <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg ">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 md:hidden block ">
               <thead className="text-xs text-[#555555] uppercase ">
@@ -88,14 +89,25 @@ function TransTable() {
                     >
                       {item.type}
                     </th>
-                    <td className="px-6 py-4">{item.id}</td>
+                    <td className="px-6 py-4">{item.track_id}</td>
                     <td className="px-6 py-4">
-                      <Txstatus status={item.status} />
+                      <Txstatus
+                        status={
+                          item.type === "Payment"
+                            ? item.payment.status
+                            : item.withdrawal.status
+                        }
+                      />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(item.createdAt)}
                     </td>
-                    <td className="px-6 py-4 ">₦{item.amount}</td>
+                    <td className="px-6 py-4 ">
+                      ₦
+                      {item.type === "Payment"
+                        ? item.payment.amount
+                        : item.withdrawal.amount}
+                    </td>
                     <td className="px-6 py-4 ">
                       <TxReedem id={item._id} />
                     </td>
@@ -120,7 +132,10 @@ function TransTable() {
                       {item.type}
                     </div>
                     <div className="text-[#0D0033] text-xs ml-2 font-bold">
-                      ₦{item.amount}
+                      ₦
+                      {item.type === "Payment"
+                        ? item.payment.amount
+                        : item.withdrawal.amount}
                     </div>
                     <div className="font-meduim  ml-2 text-xs">
                       {formatDate(item.createdAt)}
