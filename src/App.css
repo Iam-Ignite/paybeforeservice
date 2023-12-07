@@ -1,3 +1,23 @@
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova"),
+    url("/fonts/Proxima Nova Reg.otf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Proxima Nova";
+  src: local("Proxima Nova-Bold"),
+    url("/fonts/Proxima-Nova-Bold.otf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: "YourFont", sans-serif; /* Use 'YourFont' for the entire body */
+}
+
 html {
   box-sizing: border-box;
   font-size: 16px;
@@ -26,6 +46,7 @@ ul {
   padding: 0;
   font-weight: normal;
   user-select: none;
+  font-family: Proxima Nova;
 }
 
 ol,
