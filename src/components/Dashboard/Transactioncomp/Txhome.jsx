@@ -12,7 +12,7 @@ import {
   Txtype,
 } from "./Txcomp";
 
-export default function Txhome({ windowWidth, data }) {
+export default function Txhome({ windowWidth, data, setRedeemObj }) {
   return (
     <>
       {data?.map((item, idx) => (
@@ -65,7 +65,7 @@ export default function Txhome({ windowWidth, data }) {
 
           {/* Redeem or Redeemed */}
           {item.type === "Payment" && !item.payment.isRedeemed ? (
-            <TxReedem id={item._id} />
+            <TxReedem item={item} setRedeemObj={setRedeemObj} />
           ) : (
             <TxDownload id={item._id} />
           )}

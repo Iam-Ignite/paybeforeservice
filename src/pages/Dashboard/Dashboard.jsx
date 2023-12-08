@@ -16,6 +16,10 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [profileData, setProfileData] = useState(null);
+  const [redeemObj, setRedeemObj] = useState({
+    open: false,
+    data: {},
+  });
 
   const token = localStorage.getItem("token");
 
@@ -99,7 +103,11 @@ export default function Dashboard() {
 
   return (
     <div className="p-7 mt-3 pb-24">
-      <RedeemModal setRedeemModal={setRedeemModal} redeemModal={redeemModal} />
+      {/* <RedeemModal setRedeemModal={setRedeemModal} redeemModal={redeemModal} /> */}
+
+      {redeemObj.open && (
+        <RedeemModal redeemObj={redeemObj} setRedeemObj={setRedeemObj} />
+      )}
       <div className="">
         {windowWidth > 768 ? (
           <Topaction setPaymentModal={setPaymentModal} />
@@ -166,6 +174,7 @@ export default function Dashboard() {
               <Txhome
                 windowWidth={windowWidth}
                 data={profileData?.recent_transactions}
+                setRedeemObj={setRedeemObj}
               />
             ) : (
               <div className="flex justify-center flex-col mt-20 items-center ">
