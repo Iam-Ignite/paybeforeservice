@@ -60,9 +60,17 @@ export const Txbalance = ({ amount }) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export const Txbutton = ({ id }) => {
+export const TxReedem = ({ item, setRedeemObj }) => {
   return (
-    <div className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px]">
+    <div
+      className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+      onClick={() =>
+        setRedeemObj({
+          open: true,
+          data: item,
+        })
+      }
+    >
       Redeem
     </div>
   );
