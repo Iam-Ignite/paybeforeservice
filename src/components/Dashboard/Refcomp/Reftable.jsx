@@ -2,32 +2,24 @@
 
 import { useContext, useState } from "react";
 import {
-  TxDownload,
   TxReedem,
   TxiconIn,
   TxiconOut,
   Txstatus,
-} from "../Dashboard/Transactioncomp/Txcomp";
-import { RedeemIcon, WithdrawIcon } from "../icons/Icons";
+} from "../../Dashboard/Transactioncomp/Txcomp"; //Dashboard/Transactioncomp/Txcomp
+import { RedeemIcon, WithdrawIcon } from "../../icons/Icons";
 import axios from "axios";
 import { useEffect } from "react";
-import { ShopContext } from "../../utils/contextShop";
+import { ShopContext } from "../../../utils/contextShop";
 
-function TransTable({ redeemObj, setRedeemObj }) {
+function Reftable() {
   const [data, setData] = useState(null);
-
-  const {
-    paymentModal,
-    successRedeem,
-    pagination,
-    setPagination,
-    currentPage,
-    setCurrentPage,
-  } = useContext(ShopContext);
-
+  const { pagination, setPagination, currentPage, setCurrentPage } =
+    useContext(ShopContext);
   const token = localStorage.getItem("token");
   const getTransaction = async () => {
-    const endpoint = `https://paybeforeservice.onrender.com/PayBeforeService/v1/transaction/getTx?page=${currentPage}`;
+    const endpoint =
+      "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
 
     try {
       const response = await axios.get(endpoint, {
@@ -40,7 +32,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
       if (response.data.status) {
         // Process the response data as needed
         setData(response.data.data);
-        setPagination(response.data.pagination);
+        setPagination(response.data?.pagination);
       } else {
         if (response.data.data.message === "invalid token")
           setTokenActive(false);
@@ -51,9 +43,9 @@ function TransTable({ redeemObj, setRedeemObj }) {
         return;
       }
     } catch (error) {
-      setNotify(true);
-      setNotifyType("error");
-      setNotifymsg(error);
+      // setNotify(true);
+      // setNotifyType("error");
+      // setNotifymsg(error);
     }
   };
 
@@ -72,7 +64,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
   useEffect(() => {
     getTransaction();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paymentModal, successRedeem, currentPage]);
+  }, []);
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
@@ -92,9 +84,9 @@ function TransTable({ redeemObj, setRedeemObj }) {
         {data?.length !== 0 ? (
           <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg ">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 sm:hidden block ">
-              <thead className="text-xs text-[#555555] uppercase table-auto">
+              <thead className="text-xs text-[#555555] uppercase ">
                 <tr>
-                  <th scope="col" className="px-5 py-3">
+                  <th scope="col" className="px-6 py-3">
                     Transactions
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -109,11 +101,12 @@ function TransTable({ redeemObj, setRedeemObj }) {
                   <th scope="col" className="px-6 py-3">
                     Amount
                   </th>
+                  <th scope="col" className="px-6 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {data?.map((item, idx) => (
-                  <tr className="bg-white border-b mr-10" key={idx}>
+                  <tr className="bg-white border-b " key={idx}>
                     <th
                       scope="row"
                       className="px-4 py-4 font-medium text-gray-900 flex items-center justify-center gap-3"
@@ -122,37 +115,18 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         scope="row"
                         className="font-medium pl-2 text-gray-900"
                       >
-                        {item.type === "Payment" ? <TxiconIn /> : <TxiconOut />}
+                        <TxiconIn />
                       </td>
                       {item.type}
                     </th>
-                    <td className="px-6 py-4">{item.track_id}</td>
+                    <td className="px-6 py-4">{item._id}</td>
                     <td className="px-6 py-4">
-                      <Txstatus
-                        status={
-                          item.type === "Payment"
-                            ? item.payment.status
-                            : item.withdrawal.status
-                        }
-                      />
+                      <Txstatus status={item.status} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(item.createdAt)}
                     </td>
-                    <td className="px-6 py-4 ">
-                      ₦
-                      {item.type === "Payment"
-                        ? item.payment.amount
-                        : item.withdrawal.amount}
-                    </td>
-                    <td className="px-6 py-4 ">
-                      {/* <TxReedem item={item} setRedeemObj={setRedeemObj} /> */}
-                      {item.type === "Payment" && !item.payment.isRedeemed ? (
-                        <TxReedem item={item} setRedeemObj={setRedeemObj} />
-                      ) : (
-                        <TxDownload id={item._id} />
-                      )}
-                    </td>
+                    <td className="px-6 py-4 ">₦{item.amount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -174,30 +148,12 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         {item.type}
                       </div>
                       <div className="text-[#0D0033] text-xs ml-2 font-bold">
-                        ₦
-                        {item.type === "Payment"
-                          ? item.payment.amount
-                          : item.withdrawal.amount}
+                        ₦{item.amount}
                       </div>
                       <div className="font-meduim  ml-2 text-xs">
                         {formatDate(item.createdAt)}
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px]"
-                    // onClick={() =>
-                    //   setRedeemObj({
-                    //     open: true,
-                    //     data: item,
-                    //   })
-                    // }
-                  >
-                    {item.type === "Payment" && !item.payment.isRedeemed ? (
-                      <TxReedem item={item} setRedeemObj={setRedeemObj} />
-                    ) : (
-                      <TxDownload id={item._id} />
-                    )}
                   </div>
                 </div>
               ))}
@@ -205,17 +161,17 @@ function TransTable({ redeemObj, setRedeemObj }) {
           </div>
         ) : (
           <div className="flex justify-center flex-col mt-20 items-center ">
-            <img src="./empty.svg" className="w-28 h-28" alt="" />
+            <img src="/src/assets/empty.svg" className="w-28 h-28" alt="" />
             <p className="font-semibold text-xs text-black">
-              You have no transactions
+              You have no referrals
             </p>
             <p className="font-normal text-xs text-gray-600">
-              Your payments would show up here after you have made a successful
-              transaction
+              Your referrals would show up here after you have added a few
             </p>
           </div>
         )}
       </div>
+
       <nav className="absolute right-8">
         <ul className="inline-flex -space-x-px text-sm">
           {currentPage > 1 && (
@@ -251,7 +207,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
   );
 }
 
-export default TransTable;
+export default Reftable;
 
 export function PageNum({ current, total, NumSelectPage }) {
   return total > 3 ? (

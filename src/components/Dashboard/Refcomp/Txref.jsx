@@ -1,7 +1,10 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+/** @format */
+
 import {
   Txbalance,
   TxReedem,
+  TxDownload,
   Txdate,
   TxiconIn,
   TxiconOut,
@@ -9,68 +12,32 @@ import {
   Txtype,
 } from "../Transactioncomp/Txcomp";
 
-export default function Txref() {
-  const tx = [
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-    {
-      type: "Recieved from client",
-      tx_id: "567773DTYY373",
-      status: "pending",
-      date: "2023-09-01T10:00:00Z",
-      amount: 5000,
-    },
-  ];
-
+export default function Txref({ windowWidth, data }) {
   return (
-    <div className="flex justify-between px-2 items-center">
-      {/* tx icon and type */}
-      <div className="flex items-center gap-2">
-        {/* Icon */}
-        <Txicon />
+    <>
+      {data?.map((item, idx) => (
+        <div className="flex justify-between items-center mb-2" key={idx}>
+          {/* tx icon and type */}
+          <div className="flex justify-between items-center ">
+            {/* Icon */}
 
-        {/* Type */}
-        <div className="text-[#555] leading-[20px]">
-          <Txtype />
-          <Txdate />
+            <TxiconIn status={item.status} />
+
+            {/* Type */}
+            <div className="text-[#555] leading-[20px]">
+              <Txtype txtype={item.type} />
+              {windowWidth <= 768 && <Txbalance amount={item.amount} />}
+              <Txdate date={item.createdAt} />
+            </div>
+          </div>
+
+          {/* status */}
+          {/* {windowWidth > 768 && <Txstatus status={item.status} />} */}
+
+          {/* Amount */}
+          {windowWidth > 768 && <Txbalance amount={item.amount} />}
         </div>
-      </div>
-
-      {/* Amount */}
-      <Txbalance />
-    </div>
+      ))}
+    </>
   );
 }

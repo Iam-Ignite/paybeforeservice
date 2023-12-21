@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Topaction from "../../components/Dashboard/DashboardComp/Topaction";
 import Wallet from "../../components/Dashboard/DashboardComp/Wallet";
 import Txhome from "../../components/Dashboard/Transactioncomp/Txhome";
@@ -9,17 +9,27 @@ import Userheader from "../../components/Dashboard/Userheader";
 import PaymentModal from "../../components/Dashboard/PaymentModal";
 import axios from "axios";
 import RedeemModal from "../../components/Dashboard/RedeemModal";
+import { ShopContext } from "../../utils/contextShop";
+import { copyCode } from "../../utils/constants";
 
 export default function Dashboard() {
-  const [paymentModal, setPaymentModal] = useState(false);
-  const [redeemModal, setRedeemModal] = useState(false);
-  const [data, setData] = useState(null);
+  const {
+    setNotify,
+    setNotifyType,
+    setNotifymsg,
+    redeemObj,
+    setRedeemObj,
+    setTokenActive,
+    paymentModal,
+    setPaymentModal,
+    profileData,
+    setProfileData,
+  } = useContext(ShopContext);
+
+  const [dataref, setRefData] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [profileData, setProfileData] = useState(null);
-  const [redeemObj, setRedeemObj] = useState({
-    open: false,
-    data: {},
-  });
+  const [copy, setCopy] = useState(false);
+  const [windowObj, setWindowObj] = useState();
 
   const token = localStorage.getItem("token");
 
@@ -45,21 +55,31 @@ export default function Dashboard() {
           console.log(data, "first one first");
           setProfileData(data.data);
         } else {
-          console.error("Failed to fetch profile data");
+          const data = await response.json();
+          console.log(data, "try two");
+          if (data.message === "invalid token") setTokenActive(false);
+
+          setNotify(true);
+          setNotifyType("warn");
+          setNotifymsg(response.data.message);
+          return;
         }
       } catch (error) {
-        console.error("Error:", error);
+        // setNotify(true);
+        // setNotifyType("warn");
+        // setNotifymsg(error);
+        console.log("checking oooo");
       }
     };
 
     // Call the function to fetch data
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [profileData, paymentModal]);
 
-  const getTransaction = async () => {
+  const getRefBonus = async () => {
     const endpoint =
-      "https://paybeforeservice.onrender.com/PayBeforeService/v1/transaction/getTx";
+      "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
 
     try {
       const response = await axios.get(endpoint, {
@@ -71,7 +91,7 @@ export default function Dashboard() {
 
       if (response.status >= 200 && response.status < 300) {
         // Process the response data as needed
-        setData(response.data.data);
+        setRefData(response.data.data);
       } else {
         console.log("Failed to fetch transaction data");
       }
@@ -82,9 +102,13 @@ export default function Dashboard() {
 
   // Call the function to make the GET request
   useEffect(() => {
-    getTransaction();
+    getRefBonus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setWindowObj(window);
+    setTimeout(() => {
+      setCopy(false);
+    }, 4500);
+  }, [copy]);
 
   useEffect(() => {
     // Update the windowWidth state when the window is resized
@@ -169,7 +193,7 @@ export default function Dashboard() {
           </div>
 
           {/* Main content */}
-          <div className="bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80">
+          <div className="bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80 flex flex-col justify-between ">
             {profileData?.recent_transactions.length !== 0 ? (
               <Txhome
                 windowWidth={windowWidth}
@@ -178,7 +202,7 @@ export default function Dashboard() {
               />
             ) : (
               <div className="flex justify-center flex-col mt-20 items-center ">
-                <img src="/src/assets/empty.svg" className="w-28 h-28" alt="" />
+                <img src="./empty.svg" className="w-28 h-28" alt="" />
                 <p className="font-semibold text-xs text-black">
                   You have no transactions
                 </p>
@@ -201,25 +225,38 @@ export default function Dashboard() {
           <div className="bg-[#FFF] border rounded-md p-2 px-3 flex">
             <input
               type="text"
-              value={`https://www.example.com/randht${profileData?.userReferralID}`}
+              value={`${windowObj?.location.protocol}//${windowObj?.location.hostname}/?ref=${profileData?.userReferralID}`}
               className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
             />
-            <svg
-              className="cursor-pointer"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15.75 17.25V20.625C15.75 21.246 15.246 21.75 14.625 21.75H4.875C4.57663 21.75 4.29048 21.6315 4.0795 21.4205C3.86853 21.2095 3.75 20.9234 3.75 20.625V7.875C3.75 7.254 4.254 6.75 4.875 6.75H6.75C7.25257 6.74966 7.7543 6.79114 8.25 6.874M15.75 17.25H19.125C19.746 17.25 20.25 16.746 20.25 16.125V11.25C20.25 6.79 17.007 3.089 12.75 2.374C12.2543 2.29114 11.7526 2.24966 11.25 2.25H9.375C8.754 2.25 8.25 2.754 8.25 3.375V6.874M15.75 17.25H9.375C9.07663 17.25 8.79048 17.1315 8.5795 16.9205C8.36853 16.7095 8.25 16.4234 8.25 16.125V6.874M20.25 13.5V11.625C20.25 10.7299 19.8944 9.87145 19.2615 9.23852C18.6286 8.60558 17.7701 8.25 16.875 8.25H15.375C15.0766 8.25 14.7905 8.13148 14.5795 7.9205C14.3685 7.70952 14.25 7.42337 14.25 7.125V5.625C14.25 5.18179 14.1627 4.74292 13.9931 4.33345C13.8235 3.92397 13.5749 3.55191 13.2615 3.23852C12.9481 2.92512 12.576 2.67652 12.1666 2.50691C11.7571 2.3373 11.3182 2.25 10.875 2.25H9.75"
-                stroke="#0D0033"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+
+            {copy ? (
+              <div className="text-[#6E3EFF] font-semibold mb-2 text-xs">
+                copied
+              </div>
+            ) : (
+              <svg
+                onClick={() => {
+                  copyCode(
+                    `${windowObj?.location.protocol}//${windowObj?.location.hostname}//?ref=${profileData?.userReferralID}`
+                  ),
+                    setCopy(true);
+                }}
+                className="cursor-pointer"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.75 17.25V20.625C15.75 21.246 15.246 21.75 14.625 21.75H4.875C4.57663 21.75 4.29048 21.6315 4.0795 21.4205C3.86853 21.2095 3.75 20.9234 3.75 20.625V7.875C3.75 7.254 4.254 6.75 4.875 6.75H6.75C7.25257 6.74966 7.7543 6.79114 8.25 6.874M15.75 17.25H19.125C19.746 17.25 20.25 16.746 20.25 16.125V11.25C20.25 6.79 17.007 3.089 12.75 2.374C12.2543 2.29114 11.7526 2.24966 11.25 2.25H9.375C8.754 2.25 8.25 2.754 8.25 3.375V6.874M15.75 17.25H9.375C9.07663 17.25 8.79048 17.1315 8.5795 16.9205C8.36853 16.7095 8.25 16.4234 8.25 16.125V6.874M20.25 13.5V11.625C20.25 10.7299 19.8944 9.87145 19.2615 9.23852C18.6286 8.60558 17.7701 8.25 16.875 8.25H15.375C15.0766 8.25 14.7905 8.13148 14.5795 7.9205C14.3685 7.70952 14.25 7.42337 14.25 7.125V5.625C14.25 5.18179 14.1627 4.74292 13.9931 4.33345C13.8235 3.92397 13.5749 3.55191 13.2615 3.23852C12.9481 2.92512 12.576 2.67652 12.1666 2.50691C11.7571 2.3373 11.3182 2.25 10.875 2.25H9.75"
+                  stroke="#0D0033"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
           </div>
 
           {/* Referrals showing */}
@@ -233,12 +270,16 @@ export default function Dashboard() {
             {/* Main content */}
             <div className="bf-[#fff] border border-[#DADADA] rounded-2xl w-100  p-2 bg-[#FFF] mt-3">
               {/* <Txref /> */}
-              <div className="flex justify-center flex-col items-center my-5">
-                <img src="/src/assets/empty.svg" className="w-28 h-28" alt="" />
-                <p className="font-semibold text-xs text-black">
-                  You have no refferals
-                </p>
-              </div>
+              {dataref?.length !== 0 ? (
+                <Txref windowWidth={windowWidth} data={dataref} />
+              ) : (
+                <div className="flex justify-center flex-col items-center my-5">
+                  <img src="/empty.svg" className="w-28 h-28" alt="" />
+                  <p className="font-semibold text-xs text-black">
+                    You have no refferals
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

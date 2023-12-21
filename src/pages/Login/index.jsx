@@ -1,12 +1,25 @@
 /** @format */
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import Container from "../CreateAccount/components/Container";
 import { Link, useNavigate } from "react-router-dom";
 import { Navigation } from "../../components";
+import { ShopContext } from "../../utils/contextShop";
+import Notify from "../../components/Notify";
 
 const Login = () => {
+  const {
+    notify,
+    setNotify,
+    notifymsg,
+    notifyType,
+    setNotifyType,
+    setNotifymsg,
+    tokenActive,
+    setTokenActive,
+  } = useContext(ShopContext);
+
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
@@ -46,32 +59,47 @@ const Login = () => {
         body: JSON.stringify(data),
       });
 
+      console.log(response, "checking response");
+
       if (response.ok) {
+        console.log("one one");
         const res = await response.json();
-        console.log(res, "awaiting");
         // Login successful
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("token", res.token);
+        setTokenActive(true);
         navigate("/dashboard"); // Redirect to the dashboard or any other page
       } else {
+        const res = await response.json();
+        console.log(res, "one two");
         // Handle error responses
-        console.error("Error:", response.statusText);
         setLoading(false);
+        setNotify(true);
+        setNotifyType("warn");
+        setNotifymsg(res.message);
+        return;
       }
     } catch (error) {
-      console.error("Error:", error.message);
-      setLoading(false);
+      console.log("three one");
+
+      // setLoading(false);
+
+      // setNotify(true);
+      // setNotifyType("warn");
+      // setNotifymsg(error);
       // Handle any network or other errors
     }
   };
 
   return (
-    <div className="mx-5">
+    <div className="mx-5 relative z-[9999]">
       <Navigation />
+      {notify && <Notify />}
       <div className="my-5">
         <h2 className="text-primary text-[24px] font-ui-bold text-center ">
           SwiftSettle
         </h2>
+        {/* <div className="">{notify && notifymsg}</div> */}
       </div>
       <Container>
         <h3 className="mt-[16px] mb-[8px] font-ui-semi text-[14px]">Email</h3>

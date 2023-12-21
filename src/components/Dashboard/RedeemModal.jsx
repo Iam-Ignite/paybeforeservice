@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { ShopContext } from "../../utils/contextShop";
+import axios from "axios";
 
 export default function RedeemModal({ redeemObj, setRedeemObj }) {
+  const {
+    setNotify,
+    setNotifyType,
+    setNotifymsg,
+    successRedeem,
+    setSuccessRedeem,
+  } = useContext(ShopContext);
   const [inputValue, setInputValue] = useState("");
 
   const token = localStorage.getItem("token");
   const redeemTx = async () => {
     //check
-    if (inputValue === "") return console.log("input needed");
+    if (inputValue === "") {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Code needed");
+      return;
+    }
     const endpoint =
       "https://paybeforeservice.onrender.com/PayBeforeService/v1/payment/redeemPayment";
 
@@ -24,13 +38,18 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
         }
       );
 
-      if (response.data.status) {
-        setData(response.data.data);
-      } else {
-        console.log("Failed to fetch transaction data");
+      if (!response.data.status || response.status !== 200) {
+        console.log("reeedemed modal called");
+        setNotify(true);
+        setNotifyType("warn");
+        setNotifymsg(response.data.message);
+        return;
       }
+      setSuccessRedeem(true);
     } catch (error) {
-      console.error(error);
+      setNotify(true);
+      setNotifyType("error");
+      setNotifymsg(error.response.data.message);
     }
   };
 
@@ -48,13 +67,15 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
     return formattedDate;
   };
 
+  useEffect(() => {}, []);
+
   return (
     <div
-      className={` absolute w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 ${
+      className={` absolute w-full md:p-[10px]  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 ${
         redeemObj.open ? "flex" : "hidden"
       }`}
     >
-      <div className="h-auto flex flex-col justify-center  w-1/3 bg-white relative p-5 rounded-md">
+      <div className="h-auto md:w-[100%] flex flex-col justify-center  w-1/3 bg-white relative p-5 rounded-md">
         <svg
           className="w-3 h-3 absolute right-8 top-6 cursor-pointer"
           aria-hidden="true"
@@ -84,18 +105,18 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
           <div className="flex text-[#555] justify-between">
             <p className="text-sm">Full Name</p>
             <p className="text-xs font-semibold">
-              {redeemObj.data.payment.sender.beneficiary_bank_name}
+              {redeemObj?.data?.payment.sender.beneficiary_bank_name}
             </p>
           </div>
           <div className="flex text-[#555] justify-between">
             <p className="text-sm">Date</p>
             <p className="text-xs font-semibold">
-              {formatDate(redeemObj.data.createdAt)}
+              {formatDate(redeemObj?.data.createdAt)}
             </p>
           </div>
           <div className="flex text-[#555] justify-between">
             <p className="text-sm">Transaction ID</p>
-            <p className="text-xs font-semibold">{redeemObj.data.track_id}</p>
+            <p className="text-xs font-semibold">{redeemObj?.data.track_id}</p>
           </div>
           <div className="flex text-[#555] justify-between">
             <p className="text-sm">Note</p>

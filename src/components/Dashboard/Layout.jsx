@@ -12,6 +12,8 @@ export default function Layout({ children }) {
     */}
 
       <div className="w-[100%] h-screen md:h-auto  bg-[#F7F7F7] relative z-[9999] grid grid-cols-4 text-[#FFF]">
+        {notify && <Notify />}
+        {successRedeem && <SuccessModal setSuccessRedeem={setSuccessRedeem} />}
         {/* Left */}
         <div className="md:fixed md:bottom-0 md:w-full z-40 2xl:col-span-1 row-span-full ">
           <Dashnavidate />

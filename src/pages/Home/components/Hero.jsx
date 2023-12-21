@@ -16,6 +16,7 @@ import appleIcon from "../../../assets/apple.png";
 import playIcon from "../../../assets/playstore.png";
 import axios from "axios";
 import Confetti from "react-dom-confetti";
+import { useSearchParams } from "react-router-dom";
 
 const Hero = () => {
   const [transactModalOpen, setTransactModalOpen] = useState(false);
@@ -80,17 +81,37 @@ const Hero = () => {
 
   const handleCloseModal = (closeModal) => {
     setTransactModalOpen(closeModal);
+    setPaymentDetails({
+      amount: "",
+      payId: "",
+      accountId: "",
+      accountName: "",
+      accountNumber: "",
+      bank: "",
+      expiration: "",
+    });
+    setToken("");
+    setSocketData({});
   };
 
   const config = {
     angle: 90,
     spread: 800,
-    startVelocity: 40,
-    elementCount: 70,
-    decay: 0.75,
+    startVelocity: 60,
+    elementCount: 100,
+    decay: 0.9,
   };
 
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("ref"); // get query param value
+
+  console.log(query, "here there and all that");
+
   useEffect(() => {
+    if (query) {
+      localStorage.setItem("ref", query);
+    }
+
     let socket; // Declare socket outside of the try block to access it in the cleanup function
 
     if (responseRecieved) {
