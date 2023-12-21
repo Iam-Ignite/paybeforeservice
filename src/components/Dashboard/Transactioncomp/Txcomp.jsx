@@ -61,15 +61,28 @@ export const Txbalance = ({ amount }) => {
 
 // eslint-disable-next-line no-unused-vars
 export const TxReedem = ({ item, setRedeemObj }) => {
+  // setNotify,
+  // setNotifyType,
+  // setNotifymsg,
+  const { setNotify, setNotifyType, setNotifymsg } = useContext(ShopContext);
+  const openRedeem = (item) => {
+    console.log(item, "omo ooo oo");
+    if (!item.isPaid) {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Tx not paid for cannot redeem");
+      return;
+    }
+    setRedeemObj({
+      open: true,
+      data: item,
+    });
+  };
+
   return (
     <div
       className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
-      onClick={() =>
-        setRedeemObj({
-          open: true,
-          data: item,
-        })
-      }
+      onClick={() => openRedeem(item)}
     >
       Redeem
     </div>
