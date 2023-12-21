@@ -58,9 +58,13 @@ const EnterPassword = () => {
     const userName = localStorage.getItem("userName");
     const userGender = localStorage.getItem("userGender");
     const userDateOfBirth = localStorage.getItem("userDateOfBirth");
+    const ref = localStorage.getItem("ref");
     setLoading(true);
-    const endpoint =
-      "https://paybeforeservice.onrender.com/PayBeforeService/v1/auth/signup";
+    let endpoint = `https://paybeforeservice.onrender.com/PayBeforeService/v1/auth/signup/`;
+
+    if (ref !== null) {
+      endpoint += `?ref=${ref}`;
+    }
 
     const data = {
       username: userName,

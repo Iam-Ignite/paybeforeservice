@@ -1,8 +1,16 @@
+import React, { useContext, useEffect } from "react";
+import { ShopContext } from "../../utils/contextShop";
+import Notify from "../Notify";
 import Dashnavidate from "./Dashnavidate";
 import Top from "./Top";
+import SuccessModal from "./SuccessModal";
 
 // eslint-disable-next-line react/prop-types
 export default function Layout({ children }) {
+  const { notify, successRedeem, setSuccessRedeem } = useContext(ShopContext);
+
+  useEffect(() => {}, []);
+
   return (
     <div className="">
       {/* {

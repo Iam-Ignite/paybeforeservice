@@ -4,7 +4,7 @@ import { ShopContext } from "../utils/contextShop";
 export default function Notify() {
   const { notifyType, notifymsg } = useContext(ShopContext);
   return (
-    <div className="absolute top-[29px] right-[73px] bg-[#fff] text-[#000] font-xs w-[300px] md:w-100 shadow-lg flex gap-3 items-center p-2 rounded z-[99999]">
+    <div className="fixed top-[29px] right-[73px] bg-[#fff] text-[#000] font-xs w-[300px] md:w-100 shadow-lg flex gap-3 items-center p-2 rounded z-[99999]">
       <div className="">
         {notifyType === "success" ? (
           <svg

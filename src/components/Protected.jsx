@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Layout from "../components/Dashboard/Layout";
+import { ShopContext } from "../utils/contextShop";
+import { useNavigate } from "react-router-dom";
 
 export default function Protected({ component: Component }) {
   const [isVerified, setIsVerified] = useState(true);
@@ -8,7 +10,6 @@ export default function Protected({ component: Component }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("isLoggedIn");
     const token = localStorage.getItem("isLoggedIn");
 
     const verifyToken = () => {
