@@ -161,7 +161,7 @@ function Reftable() {
           </div>
         ) : (
           <div className="flex justify-center flex-col mt-20 items-center ">
-            <img src="/src/assets/empty.svg" className="w-28 h-28" alt="" />
+            <img src="./empty.svg" className="w-28 h-28" alt="" />
             <p className="font-semibold text-xs text-black">
               You have no referrals
             </p>
