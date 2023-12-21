@@ -3,25 +3,53 @@ import React, { createContext, useEffect, useState } from "react";
 export const ShopContext = createContext("context");
 
 export const ContextProvider = (props) => {
-  const [nav, setNav] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
-  const [balances, setBalances] = useState([0, 0, 0]);
-  const [refs, Setrefs] = useState([]);
-  const [inputAddress, setInputAddress] = useState();
-  const [inputAmount, setInputAmount] = useState(10);
-  const [errShow, seterrShow] = useState(false);
-  const [clickout, setClickout] = useState(false);
+  //notification and error message
+  const [notify, setNotify] = useState(false);
+  const [notifyType, setNotifyType] = useState(""); //it can be success, error, warn
+  const [notifymsg, setNotifymsg] = useState("");
+  const [redeemObj, setRedeemObj] = useState({
+    open: false,
+    data: {},
+  });
+  const [successRedeem, setSuccessRedeem] = useState(false);
+  const [tokenActive, setTokenActive] = useState(false);
+  const [paymentModal, setPaymentModal] = useState(false);
+  //pagination
+  const [pagination, setPagination] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  //profile
+  const [profileData, setProfileData] = useState(null);
 
   //Useeffect
   useEffect(() => {
-    // setTimeout(() => {
-    //   setClickout(false);
-    //   //console.log(RefData, balancesData, Vaccinator, "Logging data two trial");
-    // }, 3500);
-  }, []);
+    setTimeout(() => {
+      setNotify(false);
+      setNotifymsg("");
+    }, 3500);
+  }, [notify]);
 
-  const contextValue = {};
+  const contextValue = {
+    notify,
+    setNotify,
+    notifyType,
+    setNotifyType,
+    notifymsg,
+    setNotifymsg,
+    redeemObj,
+    setRedeemObj,
+    successRedeem,
+    setSuccessRedeem,
+    tokenActive,
+    setTokenActive,
+    paymentModal,
+    setPaymentModal,
+    pagination,
+    setPagination,
+    currentPage,
+    setCurrentPage,
+    profileData,
+    setProfileData,
+  };
 
   return (
     <ShopContext.Provider value={contextValue}>

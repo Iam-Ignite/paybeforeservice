@@ -88,7 +88,7 @@ const Navigation = () => {
             } sm:flex flex-col bg-white px-5 py-5 sm:h-full sm:w-[100vw] transform transition-transform ease-in-out duration-300 z-40 lg:w-full`}
           >
             <div className="mb-5">
-              <ul className="flex flex-col gap-5 text-[16px] font-ui-regular list-none transition-all ease-in-out h-full">
+              <ul className="flex flex-col md:gap-0 gap-5 text-[16px] font-ui-regular list-none transition-all ease-in-out h-full">
                 <NavLink
                   to={"/"}
                   className={({ isActive }) =>

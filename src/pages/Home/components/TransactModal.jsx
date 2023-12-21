@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 // ICONS
 import { AiOutlineClose } from "react-icons/ai";
+import { copyCode } from "../../../utils/constants";
+import { TxDownload } from "../../../components/Dashboard/Transactioncomp/Txcomp";
 
 const TransactModal = ({
   _closeModal,
@@ -13,10 +15,6 @@ const TransactModal = ({
   const [closeModal, setCloseModal] = useState(false);
   const [copy, setCopy] = useState(false);
 
-  const handleCloseModal = () => {
-    setCloseModal(true);
-    _closeModal(closeModal);
-  };
   const handleCloseModal = () => {
     setCloseModal(true);
     _closeModal(closeModal);
@@ -193,10 +191,6 @@ const TransactModal = ({
                 <h4 className='font-ui-semi text-body-text text-[14px] mb-[10px] mt-5'>Narration</h4>
                 <input type="text" placeholder='Enter Code' className='py-[20px] px-[16px] border-border text-[14px] w-full outline-none border-ui-border rounded-lg mb-[30px]' />
                 <button className='bg-primary font-ui-semi py-[17px] text-white w-full rounded-lg' onClick={handlePayment}>Pay</button>
-            </form> */}
-    </div>
-  );
-};
             </form> */}
     </div>
   );

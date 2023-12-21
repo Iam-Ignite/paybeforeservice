@@ -220,7 +220,10 @@ export function PageNum({ current, total, NumSelectPage }) {
       </a>
     </li>
   ) : (
-    <a className="flex px-3 h-8" onClick={() => NumSelectPage(current)}>
+    <a
+      className="flex items-center justify-center text-black px-3 h-8"
+      onClick={() => NumSelectPage(current)}
+    >
       {current}
     </a>
   );
