@@ -254,18 +254,20 @@ function TransTable({ redeemObj, setRedeemObj }) {
 export default TransTable;
 
 export function PageNum({ current, total, NumSelectPage }) {
+  console.log(current, "checking current");
   return total > 3 ? (
-    <li>
-      <a
-        onClick={() => NumSelectPage(current)}
-        className="flex items-center justify-center px-3 h-8 leading-tight bg-white text-black"
-      >
-        {current}...{total}
-      </a>
-    </li>
+    <div
+      onClick={() => NumSelectPage(current)}
+      className="flex items-center justify-center px-3 h-8 leading-tight bg-white text-[#000]"
+    >
+      {current}...{total}
+    </div>
   ) : (
-    <a className="flex px-3 h-8" onClick={() => NumSelectPage(current)}>
+    <div
+      className="flex items-center justify-center  px-3 h-8 text-[#000]"
+      onClick={() => NumSelectPage(current)}
+    >
       {current}
-    </a>
+    </div>
   );
 }
