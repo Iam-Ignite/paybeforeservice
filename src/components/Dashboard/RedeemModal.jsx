@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ShopContext } from "../../utils/contextShop";
 import axios from "axios";
+import { formatDate } from "../../utils/constants";
 
 export default function RedeemModal({ redeemObj, setRedeemObj }) {
   const {
@@ -53,20 +54,6 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      // minute: '2-digit',
-      // second: '2-digit',
-      // timeZoneName: 'short',
-    };
-    const formattedDate = new Date(dateString).toLocaleString("en-US", options);
-    return formattedDate;
-  };
-
   useEffect(() => {}, []);
 
   return (
@@ -103,13 +90,25 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
 
         <div className="border p-5 rounded-md mb-4 flex flex-col gap-2">
           <div className="flex text-[#555] justify-between">
-            <p className="text-sm">Full Name</p>
+            <p className="text-sm">name</p>
             <p className="text-xs font-semibold">
-              {redeemObj?.data?.payment.sender.beneficiary_bank_name}
+              {redeemObj?.data?.payment.sender.account_name}
             </p>
           </div>
           <div className="flex text-[#555] justify-between">
-            <p className="text-sm">Date</p>
+            <p className="text-sm">account</p>
+            <p className="text-xs font-semibold">
+              {redeemObj?.data?.payment.sender.account_number}
+            </p>
+          </div>
+          <div className="flex text-[#555] justify-between">
+            <p className="text-sm">payment created</p>
+            <p className="text-xs font-semibold">
+              {formatDate(redeemObj?.data?.payment.created)}
+            </p>
+          </div>
+          <div className="flex text-[#555] justify-between">
+            <p className="text-sm">Date paid</p>
             <p className="text-xs font-semibold">
               {formatDate(redeemObj?.data.createdAt)}
             </p>

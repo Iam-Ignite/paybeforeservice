@@ -1,53 +1,49 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import html2canvas from "html2canvas";
+import { downloadReceipt, formatDate } from "../../utils/constants";
+import { ShopContext } from "../../utils/contextShop";
 
-// ICONS
-import { AiOutlineClose } from "react-icons/ai";
-import { copyCode, formatDate } from "../../../utils/constants";
-import { TxDownload } from "../../../components/Dashboard/Transactioncomp/Txcomp";
-
-const TransactModal = ({
-  _closeModal,
-  paymentDetails,
-  socketRecieved,
-  socketData,
-}) => {
-  const [closeModal, setCloseModal] = useState(false);
-  const [copy, setCopy] = useState(false);
+export default function Showdownload() {
+  const { toDownload, setToDownload, showDownload, setShowDownload } =
+    useContext(ShopContext);
+  const [image, setImage] = useState();
   const divRef = useRef(null);
 
-  const handleCloseModal = () => {
-    setCloseModal(true);
-    _closeModal(closeModal);
-  };
-
-  // const handlePayment = () => {
-  //     handleCloseModal()
-  //     alert("Transaction Initiated ✅")
-  // }
-
   useEffect(() => {
-    setTimeout(() => {
-      setCopy(false);
-    }, 4500);
-    console.log(divRef, "checking");
-  }, [socketRecieved, copy]);
+    console.log(divRef.current, "multiplier");
+    if (divRef.current) {
+      setImage(divRef.current);
+    }
+  }, [divRef]);
 
   return (
-    <div className="max-w-[450px] bg-white rounded-2xl py-[40px] px-[30px] w-[50%] modal:h-fit sm:w-[95vw] relative">
-      <div className="absolute right-[30px]" onClick={handleCloseModal}>
-        <AiOutlineClose color="#555555" size={20} />
-      </div>
-      <h2 className="mb-[30px] font-ui-semi text-[20px] text-center">
-        Transaction Detail
-      </h2>
-      <div className="rounded-lg border-ui-border py-[23px] px-5 border-border">
-        {socketRecieved ? (
-          <div
-            ref={divRef}
-            className="flex flex-col justify-center items-center "
-          >
-            {socketData.status === "success" ? (
+    <div className="bg-[rgba(0,0,0,0.9)] w-screen h-screen overflow-hidden fixed inset-y-0 inset-x-0 z-[99999999999] flex flex-col gap-5 justify-center items-center">
+      <svg
+        onClick={() => setShowDownload(false)}
+        className="w-3 h-3 absolute right-8 top-6 cursor-pointer"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="white"
+        viewBox="0 0 14 14"
+      >
+        <path
+          stroke="white"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+        />
+      </svg>
+      <div
+        ref={divRef}
+        className="max-w-[450px] bg-white rounded-2xl py-[40px] px-[30px] w-[50%] modal:h-fit sm:w-[95vw] relative"
+      >
+        <h2 className="mb-[30px] font-ui-semi text-[20px] text-center">
+          Transaction Detail
+        </h2>
+        <div className="rounded-lg border-ui-border py-[23px] px-5 border-border">
+          <div className="flex flex-col justify-center items-center ">
+            {toDownload?.status === "success" ? (
               <svg
                 width="95"
                 height="95"
@@ -123,124 +119,92 @@ const TransactModal = ({
                 </defs>
               </svg>
             )}
-            <div className="text-sm font-semibold text-[#22bb33]">
-              {socketData.status === "success"
-                ? "Payment Successfull"
-                : "Payment Error"}
+            <div
+              className={`text-sm font-semibold ${
+                toDownload.status === "success"
+                  ? "text-[#22bb33]"
+                  : "text-[#FF3E3E]"
+              }`}
+            >
+              $
+              {toDownload.status === "success"
+                ? `${toDownload.type} Successfull`
+                : `${toDownload.type} Failed`}
             </div>
 
             <div className="w-[80%] md:w-[100%] flex flex-col gap-3 text-xs font-semibold text-[#555] mt-10">
               <div className="w-100 flex justify-between">
                 <div className="">Payment Type</div>
-                <div className="">{socketData.type}</div>
+                <div className="">{toDownload.type}</div>
               </div>
 
               <div className="w-100 flex justify-between">
-                <div className="">sender name</div>
-                <div className="">{socketData.payment.sender.account_name}</div>
+                <div className="">Account name</div>
+                <div className="">
+                  {toDownload.type === "Payment"
+                    ? toDownload.payment.sender.account_name
+                    : toDownload.withdrawal.reciever.account_name}
+                </div>
               </div>
 
               <div className="w-100 flex justify-between">
                 <div className="">Transaction id</div>
-                <div className="">{socketData.id}</div>
+                <div className="">{toDownload._id}</div>
               </div>
 
               <div className="w-100 flex justify-between">
                 <div className="">Amount Paid</div>
-                <div className="">{socketData.payment.amount}</div>
+                <div className="">
+                  {toDownload.type === "Payment"
+                    ? toDownload.payment.amount
+                    : toDownload.withdrawal.amount}
+                </div>
               </div>
 
-              <div className="w-100 flex justify-between">
-                <div className="">Date</div>
-                <div className="">{formatDate(socketData.createdAt)}</div>
-              </div>
-            </div>
-
-            <div className="text-[#555] font-semibold mb-2 text-xs mt-5">
-              Redeem Code (Share to recieveing party)
-            </div>
-            {socketData?.status === "success" && (
-              <div className="bg-[#F7F5FF] border rounded-md p-2 px-3 flex mb-2">
-                <input
-                  type="text"
-                  value={socketData?.infoR}
-                  className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
-                />
-                {copy ? (
-                  <div className="text-[#6E3EFF] font-semibold mb-2 text-xs flex justify-center items-center">
-                    copied
+              {toDownload.payment && toDownload.payment.created ? (
+                <>
+                  <div className="w-100 flex justify-between">
+                    <div className="">Link generated</div>
+                    <div className="">
+                      {formatDate(toDownload.payment.created)}
+                    </div>
                   </div>
-                ) : (
-                  <svg
-                    onClick={() => {
-                      copyCode(socketData?.infoR), setCopy(true);
-                    }}
-                    className="cursor-pointer"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15.75 17.25V20.625C15.75 21.246 15.246 21.75 14.625 21.75H4.875C4.57663 21.75 4.29048 21.6315 4.0795 21.4205C3.86853 21.2095 3.75 20.9234 3.75 20.625V7.875C3.75 7.254 4.254 6.75 4.875 6.75H6.75C7.25257 6.74966 7.7543 6.79114 8.25 6.874M15.75 17.25H19.125C19.746 17.25 20.25 16.746 20.25 16.125V11.25C20.25 6.79 17.007 3.089 12.75 2.374C12.2543 2.29114 11.7526 2.24966 11.25 2.25H9.375C8.754 2.25 8.25 2.754 8.25 3.375V6.874M15.75 17.25H9.375C9.07663 17.25 8.79048 17.1315 8.5795 16.9205C8.36853 16.7095 8.25 16.4234 8.25 16.125V6.874M20.25 13.5V11.625C20.25 10.7299 19.8944 9.87145 19.2615 9.23852C18.6286 8.60558 17.7701 8.25 16.875 8.25H15.375C15.0766 8.25 14.7905 8.13148 14.5795 7.9205C14.3685 7.70952 14.25 7.42337 14.25 7.125V5.625C14.25 5.18179 14.1627 4.74292 13.9931 4.33345C13.8235 3.92397 13.5749 3.55191 13.2615 3.23852C12.9481 2.92512 12.576 2.67652 12.1666 2.50691C11.7571 2.3373 11.3182 2.25 10.875 2.25H9.75"
-                      stroke="#0D0033"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                )}
-              </div>
-            )}
-            <TxDownload data={socketData} />
+                  <div className="w-100 flex justify-between">
+                    <div className="">Payment made</div>
+                    <div className="">{formatDate(toDownload.createdAt)}</div>
+                  </div>
+                </>
+              ) : (
+                <div className="w-100 flex justify-between">
+                  <div className="">Date</div>
+                  <div className="">{formatDate(toDownload.createdAt)}</div>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <ul className="font-ui-regular text-[14px] text-body-text">
-            <li className="flex w-full justify-between mb-[15px] modal:flex-col">
-              <h3>Account Name</h3>
-              <h5 className="font-ui-semi text-black">
-                {paymentDetails.accountName}
-              </h5>
-            </li>
-            <li className="flex w-full justify-between mb-[15px] modal:flex-col">
-              <h3>Account Number</h3>
-              <h5 className="font-ui-semi text-black">
-                {paymentDetails.accountNumber}
-              </h5>
-            </li>
-            <li className="flex w-full justify-between mb-[15px] modal:flex-col">
-              <h3>Bank Name</h3>
-              <h5 className="font-ui-semi text-black">{paymentDetails.bank}</h5>
-            </li>
-            <li className="flex w-full justify-between mb-[15px] modal:flex-col">
-              <h3>Payment ID</h3>
-              <h5 className="font-ui-semi text-black">
-                {paymentDetails.payId}
-              </h5>
-            </li>
-            <li className="flex w-full justify-between mb-[15px] modal:flex-col">
-              <h3>Expiration Time</h3>
-              <h5 className="font-ui-semi text-black">
-                {formatDate(paymentDetails.expiration)}
-              </h5>
-            </li>
-            <li className="flex w-full justify-between modal:flex-col">
-              <h3>Amount</h3>
-              <h5 className="font-ui-semi text-primary">
-                ₦{paymentDetails.amount}
-              </h5>
-            </li>
-          </ul>
-        )}
+        </div>
       </div>
-      {/* <form action="#">
-                <h4 className='font-ui-semi text-body-text text-[14px] mb-[10px] mt-5'>Narration</h4>
-                <input type="text" placeholder='Enter Code' className='py-[20px] px-[16px] border-border text-[14px] w-full outline-none border-ui-border rounded-lg mb-[30px]' />
-                <button className='bg-primary font-ui-semi py-[17px] text-white w-full rounded-lg' onClick={handlePayment}>Pay</button>
-            </form> */}
+
+      <div className="w-[100%] flex justify-center items-center gap-5">
+        <div
+          className="bg-[#6E3EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+          onClick={() => {
+            downloadReceipt("image", image);
+            setShowDownload(false);
+          }}
+        >
+          Download Image
+        </div>
+        <div
+          className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+          onClick={() => {
+            downloadReceipt("pdf", image);
+            setShowDownload(false);
+          }}
+        >
+          Download Pdf
+        </div>
+      </div>
     </div>
   );
-};
-
-export default TransactModal;
+}

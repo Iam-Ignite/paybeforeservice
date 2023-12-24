@@ -7,6 +7,7 @@
 
 import { useContext } from "react";
 import { ShopContext } from "../../../utils/contextShop";
+import { formatDate } from "../../../utils/constants";
 
 export const TxiconIn = () => {
   return (
@@ -53,19 +54,6 @@ export const Txtype = ({ txtype }) => {
 };
 
 export const Txdate = ({ date }) => {
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      // minute: '2-digit',
-      // second: '2-digit',
-      // timeZoneName: 'short',
-    };
-    const formattedDate = new Date(dateString).toLocaleString("en-US", options);
-    return formattedDate;
-  };
   return <div className="font-meduim  ml-2 text-xs">{formatDate(date)}</div>;
 };
 
@@ -89,7 +77,7 @@ export const TxReedem = ({ item, setRedeemObj }) => {
   const { setNotify, setNotifyType, setNotifymsg } = useContext(ShopContext);
   const openRedeem = (item) => {
     console.log(item, "omo ooo oo");
-    if (!item.isPaid) {
+    if (!item?.payment.isPaid) {
       setNotify(true);
       setNotifyType("warn");
       setNotifymsg("Tx not paid for cannot redeem");
@@ -111,9 +99,17 @@ export const TxReedem = ({ item, setRedeemObj }) => {
   );
 };
 
-export const TxDownload = ({ id }) => {
+export const TxDownload = ({ data }) => {
+  const { setToDownload, setShowDownload } = useContext(ShopContext);
+
   return (
-    <div className="bg-[#6E3EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer">
+    <div
+      onClick={() => {
+        setToDownload(data);
+        setShowDownload(true);
+      }}
+      className="bg-[#6E3EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+    >
       Download
     </div>
   );

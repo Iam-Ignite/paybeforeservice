@@ -37,20 +37,18 @@ export default function Txhome({ windowWidth, data, setRedeemObj }) {
                   }
                 />
               )}
-              <Txdate date={item.createdAt} />
+              <Txdate
+                date={
+                  item.type === "Payment"
+                    ? item.payment.created
+                    : item.createdAt
+                }
+              />
             </div>
           </div>
 
           {/* status */}
-          {windowWidth > 768 && (
-            <Txstatus
-              status={
-                item.type === "Payment"
-                  ? item.payment.status
-                  : item.withdrawal.status
-              }
-            />
-          )}
+          {windowWidth > 768 && <Txstatus status={item.status} />}
 
           {/* Amount */}
           {windowWidth > 768 && (
@@ -67,7 +65,7 @@ export default function Txhome({ windowWidth, data, setRedeemObj }) {
           {item.type === "Payment" && !item.payment.isRedeemed ? (
             <TxReedem item={item} setRedeemObj={setRedeemObj} />
           ) : (
-            <TxDownload id={item._id} />
+            <TxDownload data={item} />
           )}
         </div>
       ))}

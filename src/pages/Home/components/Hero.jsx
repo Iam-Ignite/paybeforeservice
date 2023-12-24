@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 
 // COMPONENTS
@@ -12,6 +12,8 @@ import playIcon from "../../../assets/playstore.png";
 import axios from "axios";
 import Confetti from "react-dom-confetti";
 import { useSearchParams } from "react-router-dom";
+import { ShopContext } from "../../../utils/contextShop";
+import Showdownload from "../../../components/Download/Showdownload";
 
 const Hero = () => {
   const [transactModalOpen, setTransactModalOpen] = useState(false);
@@ -31,6 +33,20 @@ const Hero = () => {
   const [socketRecieved, setSocketReceived] = useState(false);
   const [socketData, setSocketData] = useState({});
   const [confettiActive, setConfettiActive] = useState(false);
+  const { showDownload } = useContext(ShopContext);
+
+  // type: "Payment",
+  // payment: {
+  //   created: "2023-12-21T18:09:52.109169776Z",
+  //   sender: {
+  //     account_number: "11128393",
+  //     account_name: "Hey there",
+  //   },
+  //   amount: 200,
+  // },
+  // status: "successful",
+  // infoR: 11234,
+  // id: "100004231221180940109805574676",
 
   const getPayment = async () => {
     setLoading(true);
@@ -99,12 +115,17 @@ const Hero = () => {
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("ref"); // get query param value
+  const queryLink = searchParams.get("payment"); // get query param value
 
   console.log(query, "here there and all that");
 
   useEffect(() => {
     if (query) {
       localStorage.setItem("ref", query);
+    }
+    if (queryLink) {
+      setToken(queryLink);
+      getPayment();
     }
 
     let socket; // Declare socket outside of the try block to access it in the cleanup function
@@ -135,10 +156,10 @@ const Hero = () => {
           setSocketData(data);
         });
 
-        // Log when the connection is closed
-        socket.on("disconnect", () => {
-          console.log("Connection closed with the server");
-        });
+        // // Log when the connection is closed
+        // socket.on("disconnect", () => {
+        //   console.log("Connection closed with the server");
+        // });
 
         // Cleanup on unmount
         return () => {
@@ -150,7 +171,7 @@ const Hero = () => {
         console.error("Error connecting to the server:", error);
       }
     }
-  }, [responseRecieved, confettiActive]);
+  }, [token, responseRecieved, confettiActive]);
 
   return (
     <>
@@ -197,6 +218,7 @@ const Hero = () => {
               <div className="border-ui-border rounded-[10px] px-5 py-4 bg-base">
                 <input
                   type="text"
+                  defaultValue={token}
                   placeholder="Enter transaction id"
                   onChange={(e) => setToken(e.target.value)}
                   className="text-[0.875rem] font-ui-semi w-full border-none outline-none bg-transparent"
@@ -231,6 +253,8 @@ const Hero = () => {
           />
         </div>
       )}
+      {/* DOWNLOAD MODAL */}
+      {showDownload && <Showdownload />}
     </>
   );
 };

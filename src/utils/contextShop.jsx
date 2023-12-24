@@ -11,22 +11,38 @@ export const ContextProvider = (props) => {
     open: false,
     data: {},
   });
+  //congratulate user on redeeming
   const [successRedeem, setSuccessRedeem] = useState(false);
+  //to check if token is active
   const [tokenActive, setTokenActive] = useState(false);
+  //payment modal
   const [paymentModal, setPaymentModal] = useState(false);
   //pagination
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   //profile
   const [profileData, setProfileData] = useState(null);
+  //show download
+  const [showDownload, setShowDownload] = useState(false);
+  const [toDownload, setToDownload] = useState();
+  //withdrawal
+  const [withdrawModal, setWithdrawModal] = useState(false);
 
   //Useeffect
   useEffect(() => {
-    setTimeout(() => {
-      setNotify(false);
-      setNotifymsg("");
-    }, 3500);
-  }, [notify]);
+    if (notify) {
+      setTimeout(() => {
+        setNotify(false);
+        setNotifymsg("");
+      }, 3500);
+    }
+
+    if (successRedeem) {
+      setTimeout(() => {
+        setSuccessRedeem(false);
+      }, 3000);
+    }
+  }, [notify, successRedeem]);
 
   const contextValue = {
     notify,
@@ -49,6 +65,12 @@ export const ContextProvider = (props) => {
     setCurrentPage,
     profileData,
     setProfileData,
+    showDownload,
+    setShowDownload,
+    toDownload,
+    setToDownload,
+    withdrawModal,
+    setWithdrawModal,
   };
 
   return (

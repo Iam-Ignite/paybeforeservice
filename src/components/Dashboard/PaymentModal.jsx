@@ -5,15 +5,22 @@
  * @format
  */
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PaymentLinkModal from "./PaymentLinkModal";
 import axios from "axios";
 
-export default function PaymentModal({ paymentModal, setPaymentModal }) {
+export default function PaymentModal({
+  paymentLink,
+  setPaymentLink,
+  paymentId,
+  setPaymentId,
+  paymentModal,
+  setPaymentModal,
+}) {
   const [modal, setModal] = useState(false);
-  const [paymentLink, setPaymentLink] = useState("");
-  const [paymentId, setPaymentId] = useState("");
   const [amount, setAmount] = useState();
+  const [windowObj, setWindowObj] = useState();
+
   const handlePayment = async () => {
     const token = localStorage.getItem("token");
 
@@ -36,7 +43,9 @@ export default function PaymentModal({ paymentModal, setPaymentModal }) {
 
       if (response.status >= 200 && response.status < 300) {
         console.log(response);
-        setPaymentLink(response.data.link);
+        setPaymentLink(
+          `${windowObj?.location.protocol}${windowObj?.location.hostname}/?payment=${response.data.data}`
+        );
         setPaymentId(response.data.data);
       } else {
         console.log("hello");
@@ -45,6 +54,10 @@ export default function PaymentModal({ paymentModal, setPaymentModal }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    setWindowObj(window);
+  }, []);
 
   return (
     <>
@@ -84,7 +97,7 @@ export default function PaymentModal({ paymentModal, setPaymentModal }) {
             <input
               type="number"
               name="phone"
-              className="flex-1 bg-[#F7F5FF] h-full px-5 py-[24px] w-full overflow-hidden rounded-r-[20000px] outline-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="flex-1 bg-[#F7F5FF] h-full px-5 py-[24px] w-full overflow-hidden rounded-r-[20000px] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Enter Amount"
               defaultValue={amount}
               onChange={(e) => setAmount(e.target.value)}
