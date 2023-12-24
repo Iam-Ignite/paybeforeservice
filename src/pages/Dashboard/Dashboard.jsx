@@ -24,12 +24,17 @@ export default function Dashboard() {
     setPaymentModal,
     profileData,
     setProfileData,
+    successRedeem,
+    setWithdrawModal,
   } = useContext(ShopContext);
 
   const [dataref, setRefData] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [copy, setCopy] = useState(false);
   const [windowObj, setWindowObj] = useState();
+  //payment generation details
+  const [paymentLink, setPaymentLink] = useState("");
+  const [paymentId, setPaymentId] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -72,37 +77,38 @@ export default function Dashboard() {
       }
     };
 
+    const getRefBonus = async () => {
+      const endpoint =
+        "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
+
+      try {
+        const response = await axios.get(endpoint, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json", // You may include this header if required by the API
+          },
+        });
+
+        if (response.status >= 200 && response.status < 300) {
+          // Process the response data as needed
+          setRefData(response.data.data);
+        } else {
+          console.log("Failed to fetch transaction data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     // Call the function to fetch data
     fetchData();
+    getRefBonus();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileData, paymentModal]);
-
-  const getRefBonus = async () => {
-    const endpoint =
-      "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
-
-    try {
-      const response = await axios.get(endpoint, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json", // You may include this header if required by the API
-        },
-      });
-
-      if (response.status >= 200 && response.status < 300) {
-        // Process the response data as needed
-        setRefData(response.data.data);
-      } else {
-        console.log("Failed to fetch transaction data");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }, [successRedeem, paymentId]);
 
   // Call the function to make the GET request
   useEffect(() => {
-    getRefBonus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     setWindowObj(window);
     setTimeout(() => {
@@ -134,7 +140,10 @@ export default function Dashboard() {
       )}
       <div className="">
         {windowWidth > 768 ? (
-          <Topaction setPaymentModal={setPaymentModal} />
+          <Topaction
+            setPaymentModal={setPaymentModal}
+            setWithdrawModal={setWithdrawModal}
+          />
         ) : (
           <div className="w-full flex justify-between items-center">
             <Userheader />
@@ -171,11 +180,18 @@ export default function Dashboard() {
 
       {windowWidth <= 768 && (
         <div className="mt-7">
-          <Topaction setPaymentModal={setPaymentModal} />
+          <Topaction
+            setPaymentModal={setPaymentModal}
+            setWithdrawModal={setWithdrawModal}
+          />
         </div>
       )}
 
       <PaymentModal
+        paymentLink={paymentLink}
+        setPaymentLink={setPaymentLink}
+        paymentId={paymentId}
+        setPaymentId={setPaymentId}
         paymentModal={paymentModal}
         setPaymentModal={setPaymentModal}
       />
@@ -225,7 +241,7 @@ export default function Dashboard() {
           <div className="bg-[#FFF] border rounded-md p-2 px-3 flex">
             <input
               type="text"
-              value={`${windowObj?.location.protocol}//${windowObj?.location.hostname}/?ref=${profileData?.userReferralID}`}
+              value={`${windowObj?.location.protocol}${windowObj?.location.hostname}/?ref=${profileData?.userReferralID}`}
               className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
             />
 

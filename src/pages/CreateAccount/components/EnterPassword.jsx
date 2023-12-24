@@ -58,6 +58,7 @@ const EnterPassword = () => {
     const userName = localStorage.getItem("userName");
     const userGender = localStorage.getItem("userGender");
     const userDateOfBirth = localStorage.getItem("userDateOfBirth");
+    const userPin = localStorage.getItem("userPin");
     const ref = localStorage.getItem("ref");
     setLoading(true);
     let endpoint = `https://paybeforeservice.onrender.com/PayBeforeService/v1/auth/signup/`;
@@ -70,6 +71,7 @@ const EnterPassword = () => {
       username: userName,
       email: email,
       password: password,
+      pin: userPin,
       gender: userGender,
       date_of_birth: userDateOfBirth,
     };
