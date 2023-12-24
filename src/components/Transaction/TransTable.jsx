@@ -90,7 +90,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
     <div className="relative">
       <div className="m-5 border rounded-2xl flex justify-center overflow-hidden h-96 bg-white px-4 md:px-0 py-2">
         {data?.length !== 0 ? (
-          <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg ">
+          <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg md:w-[100%] px-0 md:px-[10px]">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 sm:hidden block ">
               <thead className="text-xs text-[#555555] uppercase table-auto">
                 <tr>
@@ -128,13 +128,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                     </th>
                     <td className="px-6 py-4">{item.track_id}</td>
                     <td className="px-6 py-4">
-                      <Txstatus
-                        status={
-                          item.type === "Payment"
-                            ? item.payment.status
-                            : item.withdrawal.status
-                        }
-                      />
+                      <Txstatus status={item.status} />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(item.createdAt)}
@@ -150,7 +144,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                       {item.type === "Payment" && !item.payment.isRedeemed ? (
                         <TxReedem item={item} setRedeemObj={setRedeemObj} />
                       ) : (
-                        <TxDownload id={item._id} />
+                        <TxDownload data={item} />
                       )}
                     </td>
                   </tr>
@@ -184,21 +178,11 @@ function TransTable({ redeemObj, setRedeemObj }) {
                       </div>
                     </div>
                   </div>
-                  <div
-                    className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px]"
-                    // onClick={() =>
-                    //   setRedeemObj({
-                    //     open: true,
-                    //     data: item,
-                    //   })
-                    // }
-                  >
-                    {item.type === "Payment" && !item.payment.isRedeemed ? (
-                      <TxReedem item={item} setRedeemObj={setRedeemObj} />
-                    ) : (
-                      <TxDownload id={item._id} />
-                    )}
-                  </div>
+                  {item.type === "Payment" && !item.payment.isRedeemed ? (
+                    <TxReedem item={item} setRedeemObj={setRedeemObj} />
+                  ) : (
+                    <TxDownload data={item} />
+                  )}
                 </div>
               ))}
             </div>
