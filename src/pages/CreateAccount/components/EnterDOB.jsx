@@ -66,7 +66,7 @@ const EnterDOB = ({ setStep }) => {
       <div className="flex gap-2 justify-center font-ui-semi text-[14px] text-body-text">
         <div
           onClick={() => setBirthMonthDrop(!birthMonthDrop)}
-          className="flex items-center relative bg-base border-border border-ui-border gap-2 justify-between py-3 px-5 sm:px-[10px] w-[149px] sm:w-[143px] rounded-[200000px] sm:rounded-[200px]"
+          className="flex items-center relative bg-base border-border border-ui-border gap-2 justify-between py-5 px-5 sm:px-[10px] w-[149px] sm:w-[143px] rounded-[200000px] sm:rounded-[200px]"
         >
           <span className="bg-inherit outline-none w-full flex-1">
             {userBirthMonth || "Month"}

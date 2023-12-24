@@ -23,7 +23,7 @@ export default function PaymentLinkModal({
     <div
       className={`${
         !modal ? "hidden" : "flex"
-      } absolute w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 `}
+      } fixed w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 `}
     >
       <div className="h-auto flex gap-1  flex-col justify-center items-center w-1/3 md:w-full md:mx-2 bg-white relative p-6 pb-8 rounded-md">
         <svg

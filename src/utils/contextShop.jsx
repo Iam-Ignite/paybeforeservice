@@ -27,6 +27,13 @@ export const ContextProvider = (props) => {
   const [toDownload, setToDownload] = useState();
   //withdrawal
   const [withdrawModal, setWithdrawModal] = useState(false);
+  //For filter
+  const [filters, setFilters] = useState({
+    search: "",
+    dateFrom: "",
+    dateTo: "",
+    otherFilters: [],
+  });
 
   //Useeffect
   useEffect(() => {
@@ -71,6 +78,8 @@ export const ContextProvider = (props) => {
     setToDownload,
     withdrawModal,
     setWithdrawModal,
+    filters,
+    setFilters,
   };
 
   return (
