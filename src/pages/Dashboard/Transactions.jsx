@@ -31,7 +31,7 @@ export default function Transactions() {
   }
   return (
     <>
-      {redeemObj.open && (
+      {redeemObj?.open && (
         <RedeemModal redeemObj={redeemObj} setRedeemObj={setRedeemObj} />
       )}
 

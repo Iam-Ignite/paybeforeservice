@@ -15,32 +15,25 @@ export default function FilterMobile({ data }) {
 
   const filteredData = useMemo(() => {
     return data.filter((row) => {
-      console.log(data, "data");
-      // Search filter
-      if (
-        filters.search &&
-        !row.payment.linkID
-          ?.toLowerCase()
-          .includes(filters.search.toLowerCase())
-      ) {
+      const searchTerm = filters.search.toLowerCase();
+
+      const matchesSearch =
+        row.type?.toLowerCase().includes(searchTerm) ||
+        row.track_id?.toString().toLowerCase().includes(searchTerm) ||
+        row.payment?.amount.toString().includes(searchTerm) ||
+        row.withdrawal?.amount.toString().includes(searchTerm);
+
+      if (filters.search && !matchesSearch) {
         return false;
       }
 
-      // Date filter
-      if (
-        filters.dateFrom &&
-        new Date(row.createdAt) < new Date(filters.dateFrom)
-      ) {
+      const isAfterDate =
+        !filters.dateFrom ||
+        new Date(row.createdAt) >= new Date(filters.dateFrom);
+
+      if (filters.dateFrom && !isAfterDate) {
         return false;
       }
-
-      // Other filters
-      // if (
-      //   filters.otherFilters.length > 0 &&
-      //   !filters.otherFilters.includes(row.category)
-      // ) {
-      //   return false;
-      // }
 
       return true;
     });

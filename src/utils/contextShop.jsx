@@ -20,6 +20,7 @@ export const ContextProvider = (props) => {
   //pagination
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [allInfo, setAllInfo] = useState();
   //profile
   const [profileData, setProfileData] = useState(null);
   //show download
@@ -80,6 +81,8 @@ export const ContextProvider = (props) => {
     setWithdrawModal,
     filters,
     setFilters,
+    allInfo,
+    setAllInfo,
   };
 
   return (

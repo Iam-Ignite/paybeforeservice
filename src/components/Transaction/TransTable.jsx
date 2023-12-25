@@ -20,6 +20,9 @@ function TransTable({ redeemObj, setRedeemObj }) {
   const [data, setData] = useState(null);
 
   const {
+    setNotify,
+    setNotifyType,
+    setNotifymsg,
     paymentModal,
     successRedeem,
     pagination,
@@ -27,6 +30,8 @@ function TransTable({ redeemObj, setRedeemObj }) {
     currentPage,
     setCurrentPage,
     filters,
+    allInfo,
+    setAllInfo,
   } = useContext(ShopContext);
 
   const token = localStorage.getItem("token");
@@ -45,6 +50,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
         // Process the response data as needed
         setData(response.data.data);
         setPagination(response.data.pagination);
+        setAllInfo(response.data.allTx);
       } else {
         if (response.data.data.message === "invalid token")
           setTokenActive(false);
@@ -55,9 +61,10 @@ function TransTable({ redeemObj, setRedeemObj }) {
         return;
       }
     } catch (error) {
-      setNotify(true);
-      setNotifyType("error");
-      setNotifymsg(error);
+      // setNotify(true);
+      // setNotifyType("error");
+      // setNotifymsg(error);
+      console.log(error);
     }
   };
 
@@ -79,7 +86,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
 
   useEffect(() => {
     getTransaction();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log(data, "set data here");
   }, [paymentModal, successRedeem, currentPage]);
 
   return (
@@ -109,7 +116,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
               </thead>
               <tbody>
                 {hasActiveFilters ? (
-                  <FilterPC data={data} />
+                  <FilterPC data={allInfo} />
                 ) : (
                   data?.map((item, idx) => (
                     <tr className="bg-white border-b mr-10" key={idx}>
@@ -159,7 +166,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
             {/* mobile view table */}
             <div className="hidden sm:block">
               {hasActiveFilters ? (
-                <FilterMobile data={data} />
+                <FilterMobile data={allInfo} />
               ) : (
                 data?.map((item, idx) => (
                   <div
@@ -221,17 +228,19 @@ function TransTable({ redeemObj, setRedeemObj }) {
             </li>
           )}
 
-          <PageNum
-            NumSelectPage={NumSelectPage}
-            current={currentPage + 1}
-            total={data?.length / 4} // total pages
-          />
+          {data?.length >= 4 && (
+            <PageNum
+              NumSelectPage={NumSelectPage}
+              current={currentPage + 1}
+              total={data?.length / 4} // total pages
+            />
+          )}
 
           {data?.length >= 4 && (
             <li onClick={nextPage}>
               <a
                 href="#"
-                className="flex items-center justify-center px-3 h-8 leading-tight bg-[#6E3EFF] rounded-md "
+                className="flex items-center justify-center px-3 h-8 leading-tight bg-[#6E3EFF] text-white rounded-md "
               >
                 Next
               </a>
