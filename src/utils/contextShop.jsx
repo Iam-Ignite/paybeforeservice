@@ -20,6 +20,7 @@ export const ContextProvider = (props) => {
   //pagination
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [allInfo, setAllInfo] = useState();
   //profile
   const [profileData, setProfileData] = useState(null);
   //show download
@@ -27,6 +28,13 @@ export const ContextProvider = (props) => {
   const [toDownload, setToDownload] = useState();
   //withdrawal
   const [withdrawModal, setWithdrawModal] = useState(false);
+  //For filter
+  const [filters, setFilters] = useState({
+    search: "",
+    dateFrom: "",
+    dateTo: "",
+    otherFilters: [],
+  });
 
   //Useeffect
   useEffect(() => {
@@ -71,6 +79,10 @@ export const ContextProvider = (props) => {
     setToDownload,
     withdrawModal,
     setWithdrawModal,
+    filters,
+    setFilters,
+    allInfo,
+    setAllInfo,
   };
 
   return (

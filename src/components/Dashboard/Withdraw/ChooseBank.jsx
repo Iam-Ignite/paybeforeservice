@@ -29,7 +29,7 @@ export default function ChooseBank({
   }, [supported, searched]);
 
   return (
-    <div className="flex flex-col gap-5 w-[100%] mt-10">
+    <div className="flex flex-col items-center justify-center gap-5 w-[100%] mt-10">
       <div className="bg-[#FFF] border items-center md:w-[85%] rounded-md p-2 px-3 flex">
         <input
           type="search"

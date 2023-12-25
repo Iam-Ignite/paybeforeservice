@@ -209,7 +209,7 @@ export default function Dashboard() {
           </div>
 
           {/* Main content */}
-          <div className="bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80 flex flex-col justify-between ">
+          <div className="bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80 flex flex-col justify-between md:gap-2">
             {profileData?.recent_transactions.length !== 0 ? (
               <Txhome
                 windowWidth={windowWidth}

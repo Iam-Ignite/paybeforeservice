@@ -72,11 +72,11 @@ export default function SavedAccounts({
   }, [searched, pickedBene]);
 
   return (
-    <div className="flex flex-col gap-5 w-[100%]">
+    <div className="flex flex-col items-center justify-center gap-5 w-[100%]">
       <h3 className="font-ui-semi font-semibold text-lg mt-0 text-[#0D0033] mb-2 text-center ">
         Saved Accounts
       </h3>
-      <div className="bg-[#FFF] border items-center md:w-[85%] rounded-md p-2 px-3 flex">
+      <div className="w-full bg-[#FFF] border items-center md:w-[85%] rounded-md p-2 px-3 flex">
         <input
           type="search"
           placeholder="Search"

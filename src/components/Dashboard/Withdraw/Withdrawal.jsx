@@ -152,7 +152,7 @@ export default function Withdrawal({ setWithdrawModal }) {
   };
 
   return (
-    <div className="absolute w-full flex justify-center items-center h-full left-0 top-0 z-50 bg-black/70  z-[99999999]">
+    <div className="fixed w-full flex justify-center items-center h-full left-0 top-0 z-50 bg-black/70  z-[99999999]">
       <div
         className={`h-auto flex gap-1  flex-col justify-center items-center w-1/3 md:w-full md:mx-2 ${
           selected === "savedAccounts" || selected === "otp"
