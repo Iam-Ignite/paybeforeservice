@@ -111,7 +111,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
       <div className="m-5 border rounded-2xl flex justify-center overflow-hidden h-96 bg-white px-4 md:px-0 py-2">
         {data?.length !== 0 ? (
           <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg w-[100%] px-0 md:px-[10px]">
-            <table className="max-w-[none] w-full text-sm text-left rtl:text-right text-[#555] ">
+            <table className="max-w-[none] w-full text-sm text-left rtl:text-right text-[#555] md:hidden ">
               <thead className="text-xs text-[#555555] uppercase table-auto">
                 <tr>
                   <th scope="col" className="px-5 py-3">

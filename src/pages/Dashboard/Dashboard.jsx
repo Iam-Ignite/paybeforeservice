@@ -211,7 +211,11 @@ export default function Dashboard() {
 
           {/* Main content */}
           <div
-            className={`bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80 flex flex-col md:gap-2`}
+            className={`bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 ${
+              profileData?.recent_transactions.length !== 5
+                ? "h-80"
+                : "h-[100%]"
+            } flex flex-col md:gap-2`}
           >
             {profileData?.recent_transactions.length !== 0 ? (
               <Txhome
