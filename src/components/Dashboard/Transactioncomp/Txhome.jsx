@@ -191,7 +191,6 @@ export default function Txhome({ windowWidth, data, setRedeemObj }) {
           )}
 
           {/* Redeem or Redeemed */}
-          {console.log(item.payment.isPaid, "log is paid first")}
           {item.type === "Payment" && item.payment.isPaid === "pending" ? (
             <TxCancel data={item.payment} />
           ) : item.type === "Payment" &&
