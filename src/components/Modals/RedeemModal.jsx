@@ -124,7 +124,7 @@ export default function RedeemModal({ redeemObj, setRedeemObj }) {
           <div className="flex text-[#555] justify-between">
             <p className="text-sm">Amount</p>
             <p className="text-xs font-semibold text-[#6E3EFF]">
-              ₦{redeemObj.data.payment.amount}
+              ₦{redeemObj.data.payment.amount_paid}
             </p>
           </div>
         </div>

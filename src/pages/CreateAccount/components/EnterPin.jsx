@@ -96,7 +96,7 @@ const EnterPin = ({ setStep }) => {
       </div>
       <button
         onClick={() => handleSubmit()}
-        className="bg-primary px-[64px] m-auto sm:px-[0px] py-[21px] w-fit sm:w-full font-ui-semi text-[16px] text-[#ffffff] rounded-[200000px]"
+        className="bg-primary px-[64px] mt-2 m-auto sm:px-[0px] py-[21px] w-fit sm:w-full font-ui-semi text-[16px] text-[#ffffff] rounded-[200000px]"
       >
         {!loading ? "Continue" : "Loading ..."}
       </button>

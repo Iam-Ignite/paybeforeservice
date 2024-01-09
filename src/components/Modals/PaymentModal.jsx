@@ -44,7 +44,7 @@ export default function PaymentModal({
       if (response.status >= 200 && response.status < 300) {
         console.log(response);
         setPaymentLink(
-          `${windowObj?.location.protocol}${windowObj?.location.hostname}/?payment=${response.data.data}`
+          `${windowObj?.location.protocol}://${windowObj?.location.hostname}/?payment=${response.data.data}`
         );
         setPaymentId(response.data.data);
       } else {

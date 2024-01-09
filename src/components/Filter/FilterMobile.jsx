@@ -10,7 +10,7 @@ import {
 import { formatDate } from "../../utils/constants";
 import { RedeemIcon } from "../icons/Icons";
 
-export default function FilterMobile({ data }) {
+export default function FilterMobile({ setRedeemObj, data }) {
   const { filters } = useContext(ShopContext);
 
   const filteredData = useMemo(() => {

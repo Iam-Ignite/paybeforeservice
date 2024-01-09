@@ -11,9 +11,10 @@ import appleIcon from "../../../assets/apple.png";
 import playIcon from "../../../assets/playstore.png";
 import axios from "axios";
 import Confetti from "react-dom-confetti";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ShopContext } from "../../../utils/contextShop";
 import Showdownload from "../../../components/Download/Showdownload";
+import Notify from "../../../components/Notify";
 
 const Hero = () => {
   const [transactModalOpen, setTransactModalOpen] = useState(false);
@@ -31,9 +32,32 @@ const Hero = () => {
     expiration: "",
   });
   const [socketRecieved, setSocketReceived] = useState(false);
-  const [socketData, setSocketData] = useState({});
+  const [socketData, setSocketData] = useState({
+    // type: "Payment",
+    // payment: {
+    //   created: "2023-12-21T18:09:52.109169776Z",
+    //   sender: {
+    //     account_number: "11128393",
+    //     account_name: "Hey there",
+    //   },
+    //   amount: 200,
+    // },
+    // status: "failed",
+    // reason: "incomplete amount",
+    // infoR: 11234,
+    // id: "AXBBD3",
+    // reciever: "658f31375d464114e2109860",
+    // createdAt: "2023-11-09T02:56:52.958+00:00",
+  });
   const [confettiActive, setConfettiActive] = useState(false);
-  const { showDownload } = useContext(ShopContext);
+  const {
+    notify,
+    showDownload,
+    setDisputeData,
+    setNotify,
+    setNotifyType,
+    setNotifymsg,
+  } = useContext(ShopContext);
 
   // type: "Payment",
   // payment: {
@@ -49,9 +73,16 @@ const Hero = () => {
   // id: "100004231221180940109805574676",
 
   const getPayment = async () => {
+    if (token === "") {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Token cannot be empty");
+      return;
+    }
     setLoading(true);
     //production  https://paybeforeservice.onrender.com
     //local   http://localhost:8000
+
     const endpoint = `https://paybeforeservice.onrender.com/PayBeforeService/v1/payment/verifyPayment/${token}`;
 
     try {
@@ -104,20 +135,29 @@ const Hero = () => {
     setToken("");
     setSocketData({});
   };
+  const navigate = useNavigate();
+
+  const openDispute = () => {
+    // if(Object.keys(socketData).length === 0) {
+    //   setNotify(true);
+    //   setNotifyType("warn");
+    //   setNotifymsg("");
+    // }
+    setDisputeData(socketData);
+    navigate("/dispute");
+  };
 
   const config = {
     angle: 90,
-    spread: 800,
-    startVelocity: 60,
-    elementCount: 100,
-    decay: 0.9,
+    spread: 500,
+    startVelocity: 40,
+    elementCount: 70,
+    decay: 0.75,
   };
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("ref"); // get query param value
   const queryLink = searchParams.get("payment"); // get query param value
-
-  console.log(query, "here there and all that");
 
   useEffect(() => {
     if (query) {
@@ -229,14 +269,22 @@ const Hero = () => {
                   {errMsg}
                 </div>
               )}
-              <button
-                className="bg-primary px-2 py-4 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
-                onClick={() => {
-                  getPayment();
-                }}
-              >
-                {loading ? "loading" : "Continue"}
-              </button>
+              <div className="flex flex-col gap-2">
+                <button
+                  className="bg-primary px-2 py-4 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
+                  onClick={() => {
+                    getPayment();
+                  }}
+                >
+                  {loading ? "loading" : "Continue"}
+                </button>
+                <button
+                  onClick={() => openDispute()}
+                  className="bg-[#A23EFF] px-2 py-4 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
+                >
+                  Create Dispute
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -250,11 +298,14 @@ const Hero = () => {
             _closeModal={handleCloseModal}
             socketRecieved={socketRecieved}
             socketData={socketData}
+            openDispute={openDispute}
           />
         </div>
       )}
       {/* DOWNLOAD MODAL */}
       {showDownload && <Showdownload />}
+      {/* NOTIFY */}
+      {notify && <Notify />}
     </>
   );
 };

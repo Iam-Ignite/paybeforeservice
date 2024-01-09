@@ -9,6 +9,8 @@ import {
   TxiconIn,
   TxiconOut,
   Txstatus,
+  Arrows,
+  TxCancel,
 } from "../Dashboard/Transactioncomp/Txcomp";
 import { RedeemIcon, WithdrawIcon } from "../icons/Icons";
 import axios from "axios";
@@ -18,6 +20,9 @@ import { formatDate } from "../../utils/constants";
 
 function TransTable({ redeemObj, setRedeemObj }) {
   const [data, setData] = useState(null);
+  const [switchAmounts, setSwitchAmounts] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState();
+  const [switchAmountType, setSwitchAmountType] = useState("amount_created");
 
   const {
     setNotify,
@@ -84,6 +89,18 @@ function TransTable({ redeemObj, setRedeemObj }) {
     return Boolean(filters.search || filters.dateTo || filters.dateFrom);
   }, [filters]);
 
+  const openSelected = (index) => {
+    console.log(index, "called");
+    if (index !== undefined) {
+      console.log("in in here");
+      setSwitchAmounts(true);
+      setSelectedIndex(index);
+    } else {
+      setSwitchAmounts(false);
+      setSelectedIndex();
+    }
+  };
+
   useEffect(() => {
     getTransaction();
     console.log(data, "set data here");
@@ -93,8 +110,8 @@ function TransTable({ redeemObj, setRedeemObj }) {
     <div className="relative">
       <div className="m-5 border rounded-2xl flex justify-center overflow-hidden h-96 bg-white px-4 md:px-0 py-2">
         {data?.length !== 0 ? (
-          <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg md:w-[100%] px-0 md:px-[10px]">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 sm:hidden block ">
+          <div className="relative  overflow-x-auto pt-4 md:pt-0 sm:rounded-lg w-[100%] px-0 md:px-[10px]">
+            <table className="max-w-[none] w-full text-sm text-left rtl:text-right text-[#555] ">
               <thead className="text-xs text-[#555555] uppercase table-auto">
                 <tr>
                   <th scope="col" className="px-5 py-3">
@@ -109,6 +126,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                   <th scope="col" className="px-6 py-3">
                     Time/Date
                   </th>
+
                   <th scope="col" className="px-6 py-3">
                     Amount
                   </th>
@@ -116,7 +134,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
               </thead>
               <tbody>
                 {hasActiveFilters ? (
-                  <FilterPC data={allInfo} />
+                  <FilterPC setRedeemObj={setRedeemObj} data={allInfo} />
                 ) : (
                   data?.map((item, idx) => (
                     <tr className="bg-white border-b mr-10" key={idx}>
@@ -124,10 +142,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         scope="row"
                         className="px-4 py-4 font-medium text-gray-900 flex items-center justify-center gap-3"
                       >
-                        <td
-                          scope="row"
-                          className="font-medium pl-2 text-gray-900"
-                        >
+                        <td scope="row" className="font-medium text-gray-900">
                           {item.type === "Payment" ? (
                             <TxiconIn />
                           ) : (
@@ -143,15 +158,73 @@ function TransTable({ redeemObj, setRedeemObj }) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {formatDate(item.createdAt)}
                       </td>
-                      <td className="px-6 py-4 ">
-                        ₦
-                        {item.type === "Payment"
-                          ? item.payment.amount
-                          : item.withdrawal.amount}
+                      <td className="px-6 py-4 flex items-center gap-2 relative">
+                        <div className="flex items-end gap-1">
+                          ₦
+                          {item.type === "Payment"
+                            ? switchAmountType === "amount_created"
+                              ? item.payment.amount_created
+                              : item.payment.amount_paid
+                            : item.withdrawal.amount}
+                          {switchAmountType === "amount_created" ? (
+                            <div className="font-semibold text-[7px] text-[#555] ">
+                              <span>C</span>
+                            </div>
+                          ) : (
+                            <div className="font-semibold text-[7px] text-[#555] ">
+                              P
+                            </div>
+                          )}
+                          {item.type === "Payment" && (
+                            <Arrows
+                              data={switchAmounts}
+                              index={idx}
+                              openSelected={openSelected}
+                            />
+                          )}
+                          {switchAmounts && selectedIndex === idx && (
+                            <div className="top-0 left-auto transform translate-x-0 absolute bg-[#fff] shadow rounded z-[9999] p-3">
+                              {/* Amount Created */}
+                              <div
+                                onClick={() => {
+                                  setSwitchAmountType("amount_created");
+                                  setSelectedIndex(0);
+                                  setSwitchAmounts(false);
+                                }}
+                                className="flex items-end text-[#555] text-xs font-semibold cursor-pointer hover:text-primary mb-2"
+                              >
+                                <span>Amount Created</span>
+                                <span className="font-semibold text-[7px] text-[#555] p-2">
+                                  C
+                                </span>
+                              </div>
+                              {/* Amount Paid */}
+                              <div
+                                onClick={() => {
+                                  setSwitchAmountType("amount_paid");
+                                  setSelectedIndex(0);
+                                  setSwitchAmounts(false);
+                                }}
+                                className="flex items-end text-[#555] text-xs font-semibold cursor-pointer hover:text-primary"
+                              >
+                                <span>Amount Paid</span>
+                                <span className="font-semibold text-[7px] text-[#555] p-2">
+                                  P
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </td>
+
                       <td className="px-6 py-4 ">
                         {/* <TxReedem item={item} setRedeemObj={setRedeemObj} /> */}
-                        {item.type === "Payment" && !item.payment.isRedeemed ? (
+                        {item.type === "Payment" &&
+                        item.payment.isPaid === "pending" ? (
+                          <TxCancel data={item.payment} />
+                        ) : item.type === "Payment" &&
+                          item.payment.isPaid === "complete" &&
+                          !item.payment.isRedeemed ? (
                           <TxReedem item={item} setRedeemObj={setRedeemObj} />
                         ) : (
                           <TxDownload data={item} />
@@ -166,7 +239,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
             {/* mobile view table */}
             <div className="hidden sm:block">
               {hasActiveFilters ? (
-                <FilterMobile data={allInfo} />
+                <FilterMobile setRedeemObj={setRedeemObj} data={allInfo} />
               ) : (
                 data?.map((item, idx) => (
                   <div
@@ -184,7 +257,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         <div className="text-[#0D0033] text-xs ml-2 font-bold">
                           ₦
                           {item.type === "Payment"
-                            ? item.payment.amount
+                            ? item.payment.amount_to_recieve
                             : item.withdrawal.amount}
                         </div>
                         <div className="font-meduim  ml-2 text-xs">

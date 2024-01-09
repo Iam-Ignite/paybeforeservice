@@ -9,7 +9,7 @@ import {
 } from "../Dashboard/Transactioncomp/Txcomp";
 import { formatDate } from "../../utils/constants";
 
-export default function FilterPC({ data }) {
+export default function FilterPC({ setRedeemObj, data }) {
   const { filters } = useContext(ShopContext);
   const filteredData = useMemo(() => {
     return data.filter((row) => {

@@ -1,7 +1,7 @@
 /** @format */
 import { useEffect, useState, useContext } from "react";
-import RedeemModal from "../../components/Dashboard/RedeemModal";
-import TransTable from "../../components/Transaction/TransTable";
+import RedeemModal from "../../components/Modals/RedeemModal";
+import TransTable from "../../components/TableComp/TransTable";
 import { FilterIcon, SearchIcon } from "../../components/icons/Icons";
 import { ShopContext } from "../../utils/contextShop";
 

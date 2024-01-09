@@ -71,16 +71,20 @@ export const Txbalance = ({ amount }) => {
 
 // eslint-disable-next-line no-unused-vars
 export const TxReedem = ({ item, setRedeemObj }) => {
-  // setNotify,
-  // setNotifyType,
-  // setNotifymsg,
   const { setNotify, setNotifyType, setNotifymsg } = useContext(ShopContext);
   const openRedeem = (item) => {
     console.log(item, "omo ooo oo");
-    if (!item?.payment.isPaid) {
+    if (item?.payment.isPaid === "incomplete") {
       setNotify(true);
       setNotifyType("warn");
-      setNotifymsg("Tx not paid for cannot redeem");
+      setNotifymsg("Payment is not comoplete");
+      return;
+    }
+
+    if (item?.payment.isPaid === "pending") {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Payment has not been made");
       return;
     }
     setRedeemObj({
@@ -91,10 +95,29 @@ export const TxReedem = ({ item, setRedeemObj }) => {
 
   return (
     <div
-      className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+      className="bg-[#A23EFF] text-white text-center px-3 text-xs py-2 rounded-[20px] cursor-pointer"
       onClick={() => openRedeem(item)}
     >
       Redeem
+    </div>
+  );
+};
+
+export const TxCancel = ({ data }) => {
+  const { closeModalWarn, setCloseModalWarn } = useContext(ShopContext);
+
+  return (
+    <div
+      onClick={() => {
+        setCloseModalWarn({
+          status: true,
+          type: "close_payment",
+          code: data.linkID,
+        });
+      }}
+      className=" bg-gradient-to-b from-[#6E3EFF] to-[#A23EFF]  text-white text-center px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+    >
+      Cancel
     </div>
   );
 };
@@ -108,9 +131,41 @@ export const TxDownload = ({ data }) => {
         setToDownload(data);
         setShowDownload(true);
       }}
-      className="bg-[#6E3EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+      className="bg-[#6E3EFF] text-white text-center px-3 text-xs py-2 rounded-[20px] cursor-pointer"
     >
       Download
     </div>
+  );
+};
+
+export const Arrows = ({ data, index, openSelected }) => {
+  return !data ? (
+    <svg
+      onClick={() => openSelected(index)}
+      xmlns="http://www.w3.org/2000/svg"
+      width={15}
+      height={15}
+      className="cursor-pointer"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="M12 14.975q-.2 0-.375-.062T11.3 14.7l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213t-.375.062"
+      />
+    </svg>
+  ) : (
+    <svg
+      onClick={() => openSelected()}
+      xmlns="http://www.w3.org/2000/svg"
+      width={15}
+      height={15}
+      className="cursor-pointer"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#888888"
+        d="m12 10.8l-3.9 3.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.6-4.6q.3-.3.7-.3t.7.3l4.6 4.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
+      />
+    </svg>
   );
 };
