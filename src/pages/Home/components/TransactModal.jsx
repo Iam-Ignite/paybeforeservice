@@ -11,6 +11,7 @@ const TransactModal = ({
   paymentDetails,
   socketRecieved,
   socketData,
+  openDispute,
 }) => {
   const [closeModal, setCloseModal] = useState(false);
   const [copy, setCopy] = useState(false);
@@ -35,13 +36,16 @@ const TransactModal = ({
 
   return (
     <div className="max-w-[450px] bg-white rounded-2xl py-[40px] px-[30px] w-[50%] modal:h-fit sm:w-[95vw] relative">
-      <div className="absolute right-[30px]" onClick={handleCloseModal}>
+      <div
+        className="absolute right-[30px] cursor-pointer"
+        onClick={handleCloseModal}
+      >
         <AiOutlineClose color="#555555" size={20} />
       </div>
       <h2 className="mb-[30px] font-ui-semi text-[20px] text-center">
         Transaction Detail
       </h2>
-      <div className="rounded-lg border-ui-border py-[23px] px-5 border-border">
+      <div className="rounded-lg border-ui-border py-[23px] px-3 border-border">
         {socketRecieved ? (
           <div
             ref={divRef}
@@ -123,7 +127,13 @@ const TransactModal = ({
                 </defs>
               </svg>
             )}
-            <div className="text-sm font-semibold text-[#22bb33]">
+            <div
+              className={`text-sm font-semibold ${
+                socketData.status === "success"
+                  ? "text-[#22bb33]"
+                  : "text-[#FF3E3E]"
+              }`}
+            >
               {socketData.status === "success"
                 ? "Payment Successfull"
                 : "Payment Error"}
@@ -156,44 +166,55 @@ const TransactModal = ({
               </div>
             </div>
 
-            <div className="text-[#555] font-semibold mb-2 text-xs mt-5">
-              Redeem Code (Share to recieveing party)
-            </div>
             {socketData?.status === "success" && (
-              <div className="bg-[#F7F5FF] border rounded-md p-2 px-3 flex mb-2">
-                <input
-                  type="text"
-                  value={socketData?.infoR}
-                  className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
-                />
-                {copy ? (
-                  <div className="text-[#6E3EFF] font-semibold mb-2 text-xs flex justify-center items-center">
-                    copied
-                  </div>
-                ) : (
-                  <svg
-                    onClick={() => {
-                      copyCode(socketData?.infoR), setCopy(true);
-                    }}
-                    className="cursor-pointer"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15.75 17.25V20.625C15.75 21.246 15.246 21.75 14.625 21.75H4.875C4.57663 21.75 4.29048 21.6315 4.0795 21.4205C3.86853 21.2095 3.75 20.9234 3.75 20.625V7.875C3.75 7.254 4.254 6.75 4.875 6.75H6.75C7.25257 6.74966 7.7543 6.79114 8.25 6.874M15.75 17.25H19.125C19.746 17.25 20.25 16.746 20.25 16.125V11.25C20.25 6.79 17.007 3.089 12.75 2.374C12.2543 2.29114 11.7526 2.24966 11.25 2.25H9.375C8.754 2.25 8.25 2.754 8.25 3.375V6.874M15.75 17.25H9.375C9.07663 17.25 8.79048 17.1315 8.5795 16.9205C8.36853 16.7095 8.25 16.4234 8.25 16.125V6.874M20.25 13.5V11.625C20.25 10.7299 19.8944 9.87145 19.2615 9.23852C18.6286 8.60558 17.7701 8.25 16.875 8.25H15.375C15.0766 8.25 14.7905 8.13148 14.5795 7.9205C14.3685 7.70952 14.25 7.42337 14.25 7.125V5.625C14.25 5.18179 14.1627 4.74292 13.9931 4.33345C13.8235 3.92397 13.5749 3.55191 13.2615 3.23852C12.9481 2.92512 12.576 2.67652 12.1666 2.50691C11.7571 2.3373 11.3182 2.25 10.875 2.25H9.75"
-                      stroke="#0D0033"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                )}
-              </div>
+              <>
+                <div className="text-[#555] font-semibold mb-2 text-xs mt-5">
+                  Redeem Code (Share to recieveing party)
+                </div>
+                <div className="bg-[#F7F5FF] border rounded-md p-2 px-3 flex mb-2">
+                  <input
+                    type="text"
+                    value={socketData?.infoR}
+                    className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
+                  />
+                  {copy ? (
+                    <div className="text-[#6E3EFF] font-semibold mb-2 text-xs flex justify-center items-center">
+                      copied
+                    </div>
+                  ) : (
+                    <svg
+                      onClick={() => {
+                        copyCode(socketData?.infoR), setCopy(true);
+                      }}
+                      className="cursor-pointer"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.75 17.25V20.625C15.75 21.246 15.246 21.75 14.625 21.75H4.875C4.57663 21.75 4.29048 21.6315 4.0795 21.4205C3.86853 21.2095 3.75 20.9234 3.75 20.625V7.875C3.75 7.254 4.254 6.75 4.875 6.75H6.75C7.25257 6.74966 7.7543 6.79114 8.25 6.874M15.75 17.25H19.125C19.746 17.25 20.25 16.746 20.25 16.125V11.25C20.25 6.79 17.007 3.089 12.75 2.374C12.2543 2.29114 11.7526 2.24966 11.25 2.25H9.375C8.754 2.25 8.25 2.754 8.25 3.375V6.874M15.75 17.25H9.375C9.07663 17.25 8.79048 17.1315 8.5795 16.9205C8.36853 16.7095 8.25 16.4234 8.25 16.125V6.874M20.25 13.5V11.625C20.25 10.7299 19.8944 9.87145 19.2615 9.23852C18.6286 8.60558 17.7701 8.25 16.875 8.25H15.375C15.0766 8.25 14.7905 8.13148 14.5795 7.9205C14.3685 7.70952 14.25 7.42337 14.25 7.125V5.625C14.25 5.18179 14.1627 4.74292 13.9931 4.33345C13.8235 3.92397 13.5749 3.55191 13.2615 3.23852C12.9481 2.92512 12.576 2.67652 12.1666 2.50691C11.7571 2.3373 11.3182 2.25 10.875 2.25H9.75"
+                        stroke="#0D0033"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </>
             )}
-            <TxDownload data={socketData} />
+            <div className="flex justify-center items-center gap-3 mt-5">
+              <div
+                className="bg-[#A23EFF] text-white px-3 text-xs py-2 rounded-[20px] cursor-pointer"
+                onClick={() => openDispute()}
+              >
+                Create dispute
+              </div>
+
+              <TxDownload data={socketData} />
+            </div>
           </div>
         ) : (
           <ul className="font-ui-regular text-[14px] text-body-text">

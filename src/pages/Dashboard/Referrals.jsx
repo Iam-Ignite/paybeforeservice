@@ -2,7 +2,7 @@
 
 import { useContext, useState } from "react";
 import Reftable from "../../components/Dashboard/Refcomp/Reftable";
-import TransTable from "../../components/Transaction/TransTable";
+import TransTable from "../../components/TableComp/TransTable";
 import { FilterIcon, SearchIcon } from "../../components/icons/Icons";
 import { ShopContext } from "../../utils/contextShop";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";

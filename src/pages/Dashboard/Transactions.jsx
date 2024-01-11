@@ -1,16 +1,37 @@
 /** @format */
 import { useEffect, useState, useContext } from "react";
-import RedeemModal from "../../components/Dashboard/RedeemModal";
-import TransTable from "../../components/Transaction/TransTable";
+import RedeemModal from "../../components/Modals/RedeemModal";
+import TransTable from "../../components/TableComp/TransTable";
 import { FilterIcon, SearchIcon } from "../../components/icons/Icons";
 import { ShopContext } from "../../utils/contextShop";
 
 export default function Transactions() {
-  const { redeemObj, setRedeemObj } = useContext(ShopContext);
+  const { redeemObj, setRedeemObj, filters, setFilters } =
+    useContext(ShopContext);
 
+  function handleSearchChange(event) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      search: event.target.value,
+    }));
+  }
+
+  function handleDateFromChange(event) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      dateFrom: event.target.value,
+    }));
+  }
+
+  function handleDateToChange(event) {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      dateTo: event.target.value,
+    }));
+  }
   return (
     <>
-      {redeemObj.open && (
+      {redeemObj?.open && (
         <RedeemModal redeemObj={redeemObj} setRedeemObj={setRedeemObj} />
       )}
 
@@ -22,6 +43,8 @@ export default function Transactions() {
               <input
                 type="search"
                 placeholder="Search"
+                value={filters.search}
+                onChange={handleSearchChange}
                 className="bg-transparent outline-none text-sm px-2 w-full  text-[#323232]"
               />
               <label htmlFor="date">
@@ -32,6 +55,8 @@ export default function Transactions() {
               <div className="bg-[#FFF] border rounded-md p-2 px-3 flex md:w-[30%]">
                 <input
                   type="Date"
+                  value={filters.dateFrom}
+                  onChange={handleDateFromChange}
                   className="bg-transparent outline-none text-xs px-2 w-full  text-[#707070]"
                 />
                 {/* <label htmlFor="date">
@@ -41,6 +66,8 @@ export default function Transactions() {
               <div className="bg-[#FFF] border rounded-md p-2 px-3 flex md:w-[30%]">
                 <input
                   type="date"
+                  value={filters.dateTo}
+                  onChange={handleDateToChange}
                   id="date1"
                   className="bg-transparent outline-none text-xs px-2 w-full  text-[#707070]"
                 />

@@ -15,6 +15,7 @@ import Protected from "./components/Protected";
 import Login from "./pages/Login";
 import ForgetPassword from "./pages/Login/ForgetPassword";
 import ResetPassword from "./pages/Login/ResetPassword";
+import Dispute from "./pages/Dispute/Dispute";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
         />
         <Route path="/profile" element={<Protected component={Profile} />} />
         <Route path="/contacts" element={<Protected component={Contacts} />} />
+        <Route path="/dispute" element={<Dispute />} />
         <Route path="*" element={"NOT FOUND"} />
       </Routes>
     </ContextProvider>

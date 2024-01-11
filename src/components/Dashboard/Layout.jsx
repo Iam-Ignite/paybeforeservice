@@ -3,9 +3,10 @@ import { ShopContext } from "../../utils/contextShop";
 import Notify from "../Notify";
 import Dashnavidate from "./Dashnavidate";
 import Top from "./Top";
-import SuccessModal from "./SuccessModal";
+import SuccessModal from "../Modals/SuccessModal";
 import Showdownload from "../Download/Showdownload";
 import Withdrawal from "./Withdraw/Withdrawal";
+import Warnmodal from "../Modals/Warnmodal";
 
 // eslint-disable-next-line react/prop-types
 export default function Layout({ children }) {
@@ -16,6 +17,8 @@ export default function Layout({ children }) {
     showDownload,
     withdrawModal,
     setWithdrawModal,
+    closeModalWarn,
+    setCloseModalWarn,
   } = useContext(ShopContext);
 
   useEffect(() => {}, []);
@@ -33,6 +36,12 @@ export default function Layout({ children }) {
         {successRedeem && <SuccessModal setSuccessRedeem={setSuccessRedeem} />}
         {showDownload && <Showdownload />}
         {withdrawModal && <Withdrawal setWithdrawModal={setWithdrawModal} />}
+        {closeModalWarn.status && (
+          <Warnmodal
+            closeModalWarn={closeModalWarn}
+            setCloseModalWarn={setCloseModalWarn}
+          />
+        )}
         {/* Left */}
         <div className="md:fixed md:bottom-0 md:w-full z-40 2xl:col-span-1 row-span-full ">
           <Dashnavidate />

@@ -17,9 +17,16 @@ export const ContextProvider = (props) => {
   const [tokenActive, setTokenActive] = useState(false);
   //payment modal
   const [paymentModal, setPaymentModal] = useState(false);
+  //warn before modal close
+  const [closeModalWarn, setCloseModalWarn] = useState({
+    status: false,
+    type: "",
+    code: "",
+  });
   //pagination
   const [pagination, setPagination] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [allInfo, setAllInfo] = useState();
   //profile
   const [profileData, setProfileData] = useState(null);
   //show download
@@ -27,6 +34,17 @@ export const ContextProvider = (props) => {
   const [toDownload, setToDownload] = useState();
   //withdrawal
   const [withdrawModal, setWithdrawModal] = useState(false);
+  //For filter
+  const [filters, setFilters] = useState({
+    search: "",
+    dateFrom: "",
+    dateTo: "",
+    otherFilters: [],
+  });
+  //for dispute
+  const [disputeData, setDisputeData] = useState({});
+  //for cancelling transactions
+  const [cancelled, setCancelled] = useState(false);
 
   //Useeffect
   useEffect(() => {
@@ -71,6 +89,16 @@ export const ContextProvider = (props) => {
     setToDownload,
     withdrawModal,
     setWithdrawModal,
+    filters,
+    setFilters,
+    allInfo,
+    setAllInfo,
+    disputeData,
+    setDisputeData,
+    closeModalWarn,
+    setCloseModalWarn,
+    cancelled,
+    setCancelled,
   };
 
   return (

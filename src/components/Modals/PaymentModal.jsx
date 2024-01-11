@@ -44,7 +44,7 @@ export default function PaymentModal({
       if (response.status >= 200 && response.status < 300) {
         console.log(response);
         setPaymentLink(
-          `${windowObj?.location.protocol}${windowObj?.location.hostname}/?payment=${response.data.data}`
+          `${windowObj?.location.protocol}://${windowObj?.location.hostname}/?payment=${response.data.data}`
         );
         setPaymentId(response.data.data);
       } else {
@@ -64,7 +64,7 @@ export default function PaymentModal({
       <div
         className={`${
           !paymentModal ? "hidden" : "flex"
-        } absolute w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 `}
+        } fixed w-full  justify-center items-center h-full left-0 top-0 z-50 bg-black/70 `}
       >
         <div className="h-auto flex flex-col justify-center items-center w-1/3 md:w-full md:mx-2 bg-white relative p-5 rounded-md">
           <svg

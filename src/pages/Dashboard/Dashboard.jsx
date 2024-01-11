@@ -6,9 +6,9 @@ import Wallet from "../../components/Dashboard/DashboardComp/Wallet";
 import Txhome from "../../components/Dashboard/Transactioncomp/Txhome";
 import Txref from "../../components/Dashboard/Refcomp/Txref";
 import Userheader from "../../components/Dashboard/Userheader";
-import PaymentModal from "../../components/Dashboard/PaymentModal";
+import PaymentModal from "../../components/Modals/PaymentModal";
 import axios from "axios";
-import RedeemModal from "../../components/Dashboard/RedeemModal";
+import RedeemModal from "../../components/Modals/RedeemModal";
 import { ShopContext } from "../../utils/contextShop";
 import { copyCode } from "../../utils/constants";
 
@@ -26,6 +26,7 @@ export default function Dashboard() {
     setProfileData,
     successRedeem,
     setWithdrawModal,
+    cancelled,
   } = useContext(ShopContext);
 
   const [dataref, setRefData] = useState(null);
@@ -105,7 +106,7 @@ export default function Dashboard() {
     getRefBonus();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successRedeem, paymentId]);
+  }, [successRedeem, paymentId, cancelled]);
 
   // Call the function to make the GET request
   useEffect(() => {
@@ -209,7 +210,13 @@ export default function Dashboard() {
           </div>
 
           {/* Main content */}
-          <div className="bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 h-80 flex flex-col justify-between ">
+          <div
+            className={`bg-[#fff] border border-[#DADADA] rounded-2xl w-100  p-4 md:px-4 md:p-3 mt-2 ${
+              profileData?.recent_transactions.length !== 5
+                ? "h-80"
+                : "h-[100%]"
+            } flex flex-col md:gap-2`}
+          >
             {profileData?.recent_transactions.length !== 0 ? (
               <Txhome
                 windowWidth={windowWidth}

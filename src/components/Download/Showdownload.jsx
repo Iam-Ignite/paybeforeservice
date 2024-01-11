@@ -10,7 +10,6 @@ export default function Showdownload() {
   const divRef = useRef(null);
 
   useEffect(() => {
-    console.log(divRef.current, "multiplier");
     if (divRef.current) {
       setImage(divRef.current);
     }
@@ -156,7 +155,7 @@ export default function Showdownload() {
                 <div className="">Amount Paid</div>
                 <div className="">
                   {toDownload.type === "Payment"
-                    ? toDownload.payment.amount
+                    ? toDownload.payment.amount_to_recieve
                     : toDownload.withdrawal.amount}
                 </div>
               </div>
