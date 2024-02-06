@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import ForgetPassword from "./pages/Login/ForgetPassword";
 import ResetPassword from "./pages/Login/ResetPassword";
 import Dispute from "./pages/Dispute/Dispute";
+import DisputeInternal from "./pages/Dashboard/DisputeInternal";
 
 const App = () => {
   return (
@@ -43,7 +44,11 @@ const App = () => {
           element={<Protected component={Referrals} />}
         />
         <Route path="/profile" element={<Protected component={Profile} />} />
-        <Route path="/contacts" element={<Protected component={Contacts} />} />
+        {/* <Route path="/contacts" element={<Protected component={Contacts} />} /> */}
+        <Route
+          path="/dispute_internal"
+          element={<Protected component={DisputeInternal} />}
+        />
         <Route path="/dispute" element={<Dispute />} />
         <Route path="*" element={"NOT FOUND"} />
       </Routes>

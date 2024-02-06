@@ -16,11 +16,11 @@ import { RedeemIcon, WithdrawIcon } from "../icons/Icons";
 import axios from "axios";
 import { useEffect } from "react";
 import { ShopContext } from "../../utils/contextShop";
-import { PRODUCTION_URL, formatDate } from "../../utils/constants";
-import { FilterResult } from "../Filter/Filter";
+import { LOCAL_URL, PRODUCTION_URL, formatDate } from "../../utils/constants";
 import { makeCall } from "../../utils/makeCall";
+import { FilterResult } from "../Filter/Filter";
 
-function TransTable({ redeemObj, setRedeemObj }) {
+function DisputeTable({ redeemObj, setRedeemObj }) {
   const [data, setData] = useState(null);
 
   const {
@@ -40,33 +40,33 @@ function TransTable({ redeemObj, setRedeemObj }) {
 
   const token = localStorage.getItem("token");
   const getTransaction = async () => {
-    const endpoint = `${PRODUCTION_URL}/transaction/getTx?page=${currentPage}`;
+    const endpoint = `${PRODUCTION_URL}/dispute/get_all_disputes?page=${currentPage}`;
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json", // You may include this header if required by the API
     };
     try {
-      // const response = await axios.get(endpoint, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //     "Content-Type": "application/json", // You may include this header if required by the API
-      //   },
-      // });
+      //   const response = await axios.get(endpoint, {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json", // You may include this header if required by the API
+      //     },
+      //   });
       const response = await makeCall(endpoint, {}, headers, "get");
-      console.log(response, "inside transaction");
-      if (!response.status) {
-        if (response.data.data.message === "invalid token")
-          setTokenActive(false);
+      console.log(response, "checking something");
+      if (response.status) {
+        // Process the response data as needed
+        setData(response.data);
+        setPagination(response.pagination);
+        setAllInfo(response.allDx);
+      } else {
+        if (response.data.message === "invalid token") setTokenActive(false);
 
         setNotify(true);
         setNotifyType("warn");
         setNotifymsg(response.data.data.message);
         return;
       }
-      // Process the response data as needed
-      setData(response.data);
-      setPagination(response.pagination);
-      setAllInfo(response.allTx);
     } catch (error) {
       // setNotify(true);
       // setNotifyType("error");
@@ -105,10 +105,10 @@ function TransTable({ redeemObj, setRedeemObj }) {
               <thead className="text-xs text-[#555555] uppercase table-auto">
                 <tr>
                   <th scope="col" className="px-5 py-3">
-                    Transactions
+                    Type
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Transaction ID
+                    dispute ID
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Status
@@ -125,7 +125,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
               <tbody>
                 {hasActiveFilters ? (
                   <FilterResult
-                    type="transaction"
+                    type="dispute"
                     setRedeemObj={setRedeemObj}
                     data={allInfo}
                   />
@@ -137,7 +137,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         className="px-4 py-4 font-medium text-gray-900 flex items-center justify-center gap-3"
                       >
                         <td scope="row" className="font-medium text-gray-900">
-                          {item.type === "Payment" ? (
+                          {item.type === "transaction" ? (
                             <TxiconIn />
                           ) : (
                             <TxiconOut />
@@ -145,30 +145,18 @@ function TransTable({ redeemObj, setRedeemObj }) {
                         </td>
                         {item.type}
                       </th>
-                      <td className="px-6 py-4">{item.track_id}</td>
+                      <td className="px-6 py-4">{item.dispute_id}</td>
                       <td className="px-6 py-4">
                         <Txstatus status={item.status} />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {formatDate(item.createdAt)}
                       </td>
-                      <td className="px-6 py-4 flex items-center gap-2 relative">
-                        <Amounts item={item} idx={idx} />
-                      </td>
-
-                      <td className="px-6 py-4 ">
-                        {/* <TxReedem item={item} setRedeemObj={setRedeemObj} /> */}
-                        {item.type === "Payment" &&
-                        item.payment.isPaid === "pending" ? (
-                          <TxCancel data={item.payment} />
-                        ) : item.type === "Payment" &&
-                          item.payment.isPaid === "complete" &&
-                          !item.payment.isRedeemed ? (
-                          <TxReedem item={item} setRedeemObj={setRedeemObj} />
-                        ) : (
-                          <TxDownload data={item} />
-                        )}
-                      </td>
+                      {item?.amount && (
+                        <td className="px-6 py-4 flex items-center gap-2 relative">
+                          {item.amount}
+                        </td>
+                      )}
                     </tr>
                   ))
                 )}
@@ -179,7 +167,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
             <div className="hidden sm:block">
               {hasActiveFilters ? (
                 <FilterResult
-                  type="transaction"
+                  type="dispute"
                   setRedeemObj={setRedeemObj}
                   data={allInfo}
                 />
@@ -198,18 +186,19 @@ function TransTable({ redeemObj, setRedeemObj }) {
                           {item.type}
                         </div>
                         <div className="text-[#0D0033] text-xs ml-2 font-bold">
-                          <Amounts item={item} idx={idx} />
+                          {item?.amount && (
+                            <td className="px-6 py-4 flex items-center gap-2 relative">
+                              {item.amount}
+                            </td>
+                          )}
                         </div>
                         <div className="font-meduim  ml-2 text-xs">
                           {formatDate(item.createdAt)}
                         </div>
                       </div>
                     </div>
-                    {item.type === "Payment" && !item.payment.isRedeemed ? (
-                      <TxReedem item={item} setRedeemObj={setRedeemObj} />
-                    ) : (
-                      <TxDownload data={item} />
-                    )}
+
+                    <Txstatus status={item.status} />
                   </div>
                 ))
               )}
@@ -265,7 +254,7 @@ function TransTable({ redeemObj, setRedeemObj }) {
   );
 }
 
-export default TransTable;
+export default DisputeTable;
 
 export function PageNum({ current, total, NumSelectPage }) {
   return total > 3 ? (

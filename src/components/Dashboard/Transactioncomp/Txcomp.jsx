@@ -5,7 +5,7 @@
  * @format
  */
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ShopContext } from "../../../utils/contextShop";
 import { formatDate } from "../../../utils/constants";
 
@@ -167,5 +167,72 @@ export const Arrows = ({ data, index, openSelected }) => {
         d="m12 10.8l-3.9 3.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.6-4.6q.3-.3.7-.3t.7.3l4.6 4.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
       />
     </svg>
+  );
+};
+
+export const Amounts = ({ item, idx }) => {
+  const [switchAmounts, setSwitchAmounts] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState();
+  const [switchAmountType, setSwitchAmountType] = useState("amount_created");
+
+  const openSelected = (index) => {
+    console.log(index, "called");
+    if (index !== undefined) {
+      console.log("in in here");
+      setSwitchAmounts(true);
+      setSelectedIndex(index);
+    } else {
+      setSwitchAmounts(false);
+      setSelectedIndex();
+    }
+  };
+
+  return (
+    <div className="flex items-end gap-1">
+      ₦
+      {item.type === "Payment"
+        ? switchAmountType === "amount_created"
+          ? item.payment.amount_created
+          : item.payment.amount_paid
+        : item.withdrawal.amount}
+      {switchAmountType === "amount_created" ? (
+        <div className="font-semibold text-[7px] text-[#555] ">
+          <span>C</span>
+        </div>
+      ) : (
+        <div className="font-semibold text-[7px] text-[#555] ">P</div>
+      )}
+      {item.type === "Payment" && (
+        <Arrows data={switchAmounts} index={idx} openSelected={openSelected} />
+      )}
+      {switchAmounts && selectedIndex === idx && (
+        <div className="top-0 left-auto transform translate-x-0 absolute bg-[#fff] shadow rounded z-[9999] p-3">
+          {/* Amount Created */}
+          <div
+            onClick={() => {
+              setSwitchAmountType("amount_created");
+              setSelectedIndex(0);
+              setSwitchAmounts(false);
+            }}
+            className="flex items-end text-[#555] text-xs font-semibold cursor-pointer hover:text-primary mb-2"
+          >
+            <span>Amount Created</span>
+            <span className="font-semibold text-[7px] text-[#555] p-2">C</span>
+          </div>
+          {/* Amount Paid */}
+          <div
+            onClick={() => {
+              setSwitchAmountType("amount_paid");
+              setSelectedIndex(0);
+              setSwitchAmounts(false);
+            }}
+            className="flex items-end text-[#555] text-xs font-semibold cursor-pointer hover:text-primary"
+          >
+            <span>Amount Paid</span>
+            <span className="font-semibold text-[7px] text-[#555] p-2">P</span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

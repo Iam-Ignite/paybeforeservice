@@ -1,36 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import { formatDate } from "../../utils/constants";
+import { ShopContext } from "../../utils/contextShop";
 
-export default function TransactionDispute({
+export default function TransactioninternalDispute({
   disputeData,
+  createDispute,
   setReason,
   clienttx,
   setClientTx,
   setRefund,
-  setAmount,
-  setPaymentStatus,
+  amountCreated,
+  amount,
+  paymentStatus,
   setReciever,
   setSender,
+  loading,
 }) {
   const { profileData, setNotify, setNotifyType, setNotifymsg } =
     useContext(ShopContext);
-
-  useEffect(() => {
-    setAmount(
-      profileData === null ? disputeData.amount : disputeData.amount_paid
-    );
-    setPaymentStatus(
-      profileData === null ? disputeData.status : disputeData.amount_paid
-    );
-    setReciever(
-      profileData === null ? disputeData.reciever : disputeData.amount_paid
-    );
-    setSender(
-      profileData === null
-        ? disputeData?.payment?.sender.account_name
-        : disputeData.amount_paid
-    );
-  }, [third]);
 
   const setRefundAfterTx = (e) => {
     if (clienttx) {
@@ -41,12 +28,17 @@ export default function TransactionDispute({
       setNotifymsg("Cannot request refund, if transfer failed");
     }
   };
-
   return (
     <div className="w-full">
       <div className="border border-[#DADADA] p-4 w-full flex  flex-row md:flex-col justify-between gap-0 md:gap-5 md:items-start items-center  rounded text-[#555] font-semibold text-sm">
+        <div className="flex gap-1 w-24">
+          <div className="">Sender:</div>
+          <div className="trauncate">
+            {disputeData.payment.sender.account_name}
+          </div>
+        </div>
         <div className="flex gap-1">
-          <div className="">Seller:</div>
+          <div className="">Reciever:</div>
           <div className="">{disputeData.reciever}</div>
         </div>
         <div className="flex gap-1">
@@ -67,73 +59,41 @@ export default function TransactionDispute({
           {/* Question one */}
           <div className="flex flex-col gap-2">
             <div className="font-semibold text-sm text-[#555]">
-              1. was your transaction succesfull ?
+              Transaction status
             </div>
 
-            <div className="radio-button">
-              <input
-                onChange={() => setClientTx(true)}
-                name="radio-group-success"
-                id="radio-tx-yes"
-                value="yes"
-                className="radio-button__input"
-                type="radio"
-              />
-              <label htmlFor="radio-tx-yes" className="radio-button__label">
-                <span className="radio-button__custom"></span>
-                Yes
-              </label>
-            </div>
-
-            <div className="radio-button">
-              <input
-                onChange={() => setClientTx(false)}
-                name="radio-group-success"
-                id="radio-tx-no"
-                value="no"
-                className="radio-button__input"
-                type="radio"
-              />
-              <label htmlFor="radio-tx-no" className="radio-button__label">
-                <span className="radio-button__custom"></span>
-                No
-              </label>
+            <div
+              className={`radio-button ${
+                paymentStatus === "complete"
+                  ? "text-[#22bb33]"
+                  : paymentStatus === "incomplete"
+                  ? "text-[#ffcc00]"
+                  : "text-[#FF3E3E]"
+              }`}
+            >
+              {paymentStatus}
             </div>
           </div>
+
           {/* Question two */}
           <div className="flex flex-col gap-2">
             <div className="font-semibold text-sm text-[#555]">
-              2. if yes, Would you like to recieve a refund ?
+              Transaction amount created
             </div>
 
-            <div className="radio-button">
-              <input
-                onChange={setRefundAfterTx}
-                name="radio-group"
-                id="radio-refund-yes"
-                value="yes"
-                className="radio-button__input"
-                type="radio"
-              />
-              <label htmlFor="radio-refund-yes" className="radio-button__label">
-                <span className="radio-button__custom"></span>
-                Yes
-              </label>
+            <div className="radio-button text-[#6E3EFF] text-xs font-semibold">
+              N{amountCreated.toFixed(2)}
+            </div>
+          </div>
+
+          {/*Info four*/}
+          <div className="flex flex-col gap-2">
+            <div className="font-semibold text-sm text-[#555]">
+              Transaction amount Paid
             </div>
 
-            <div className="radio-button">
-              <input
-                onChange={setRefundAfterTx}
-                name="radio-group"
-                id="radio-refund-no"
-                value="no"
-                className="radio-button__input"
-                type="radio"
-              />
-              <label htmlFor="radio-refund-no" className="radio-button__label">
-                <span className="radio-button__custom"></span>
-                No
-              </label>
+            <div className="radio-button text-[#6E3EFF] text-xs font-semibold">
+              N{amount.toFixed(2)}
             </div>
           </div>
 
@@ -146,8 +106,8 @@ export default function TransactionDispute({
             <div className="bg-[#FFF] border rounded-md p-2 px-3 flex items-center w-[600px] md:[100%]">
               <input
                 type="text"
-                onChange={(e) => setReason(e.target.value)}
                 placeholder="Write Reason"
+                onChange={(e) => setReason(e.target.value)}
                 className="bg-transparent outline-none text-sm px-2 w-full text-[#323232]"
               />
 
@@ -183,7 +143,14 @@ export default function TransactionDispute({
         </div>
       </div>
 
-      {/* Getting reasons for the dispute end */}
+      <div className="w-full flex justify-center items-center mt-8">
+        <button
+          onClick={createDispute}
+          className="bg-primary px-7 py-2 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
+        >
+          {loading ? "..." : "Create dispute"}
+        </button>
+      </div>
     </div>
   );
 }

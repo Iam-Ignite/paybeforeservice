@@ -11,6 +11,7 @@ import axios from "axios";
 import RedeemModal from "../../components/Modals/RedeemModal";
 import { ShopContext } from "../../utils/contextShop";
 import { copyCode } from "../../utils/constants";
+import { makeCall } from "../../utils/makeCall";
 
 export default function Dashboard() {
   const {
@@ -39,68 +40,75 @@ export default function Dashboard() {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    // Function to make the GET request
-    const fetchData = async () => {
-      try {
-        // Replace with your actual bearer token
+  // Function to make the GET request
+  const fetchData = async () => {
+    try {
+      // Replace with your actual bearer token
 
-        const response = await fetch(
-          "https://paybeforeservice.onrender.com/PayBeforeService/v1/user/getProfile",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data, "first one first");
-          setProfileData(data.data);
-        } else {
-          const data = await response.json();
-          console.log(data, "try two");
-          if (data.message === "invalid token") setTokenActive(false);
-
-          setNotify(true);
-          setNotifyType("warn");
-          setNotifymsg(response.data.message);
-          return;
-        }
-      } catch (error) {
-        // setNotify(true);
-        // setNotifyType("warn");
-        // setNotifymsg(error);
-        console.log("checking oooo");
-      }
-    };
-
-    const getRefBonus = async () => {
-      const endpoint =
-        "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
-
-      try {
-        const response = await axios.get(endpoint, {
-          headers: {
+      // const response = await fetch(
+      //   "https://paybeforeservice.onrender.com/PayBeforeService/v1/user/getProfile",
+      //   {
+      //     method: "GET",
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      const url = "https://paybeforeservice.onrender.com/PayBeforeService/v1/user/getProfile";
+      const headers = {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json", // You may include this header if required by the API
-          },
-        });
-
-        if (response.status >= 200 && response.status < 300) {
-          // Process the response data as needed
-          setRefData(response.data.data);
-        } else {
-          console.log("Failed to fetch transaction data");
-        }
-      } catch (error) {
-        console.error(error);
+            "Content-Type": "application/json",
       }
-    };
+      const response = await makeCall(url, {}, headers, "get");
+      console.log(response, "here twenty three");
 
+      if (response.status) {
+        // const data = await response.json();
+        // console.log(data, "first one first");
+        setProfileData(response.data);
+      } else {
+        // const data = await response.json();
+        // console.log(data, "try two");
+        if (response.data.message === "invalid token") setTokenActive(false);
+
+        setNotify(true);
+        setNotifyType("warn");
+        setNotifymsg(response.data.message);
+        return;
+      }
+    } catch (error) {
+      // setNotify(true);
+      // setNotifyType("warn");
+      // setNotifymsg(error);
+      console.log("checking oooo");
+    }
+  };
+
+  const getRefBonus = async () => {
+    const endpoint =
+      "https://paybeforeservice.onrender.com/PayBeforeService/v1/referral/getRefs";
+
+    try {
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // You may include this header if required by the API
+        },
+      });
+
+      if (response.status >= 200 && response.status < 300) {
+        // Process the response data as needed
+        setRefData(response.data.data);
+      } else {
+        console.log("Failed to fetch transaction data");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     // Call the function to fetch data
     fetchData();
     getRefBonus();

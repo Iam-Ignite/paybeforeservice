@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import { ShopContext } from "../../utils/contextShop";
 import {
+  Amounts,
   TxDownload,
   TxReedem,
   TxiconIn,
@@ -14,29 +15,33 @@ export default function FilterMobile({ setRedeemObj, data }) {
   const { filters } = useContext(ShopContext);
 
   const filteredData = useMemo(() => {
-    return data.filter((row) => {
-      const searchTerm = filters.search.toLowerCase();
+    try {
+      return data.filter((row) => {
+        const searchTerm = filters.search.toLowerCase();
 
-      const matchesSearch =
-        row.type?.toLowerCase().includes(searchTerm) ||
-        row.track_id?.toString().toLowerCase().includes(searchTerm) ||
-        row.payment?.amount.toString().includes(searchTerm) ||
-        row.withdrawal?.amount.toString().includes(searchTerm);
+        const matchesSearch =
+          row.track_id?.toLowerCase().includes(searchTerm) ||
+          row.payment?.amount_created.toString().includes(searchTerm) ||
+          row.payment?.amount_paid.toString().includes(searchTerm) ||
+          row.withdrawal?.amount.toString().includes(searchTerm);
 
-      if (filters.search && !matchesSearch) {
-        return false;
-      }
+        if (filters.search && !matchesSearch) {
+          return false;
+        }
 
-      const isAfterDate =
-        !filters.dateFrom ||
-        new Date(row.createdAt) >= new Date(filters.dateFrom);
+        const isAfterDate =
+          !filters.dateFrom ||
+          new Date(row.createdAt) >= new Date(filters.dateFrom);
 
-      if (filters.dateFrom && !isAfterDate) {
-        return false;
-      }
+        if (filters.dateFrom && !isAfterDate) {
+          return false;
+        }
 
-      return true;
-    });
+        return true;
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, [filters, data]);
 
   return (
@@ -56,10 +61,7 @@ export default function FilterMobile({ setRedeemObj, data }) {
                 {item.type}
               </div>
               <div className="text-[#0D0033] text-xs ml-2 font-bold">
-                ₦
-                {item.type === "Payment"
-                  ? item.payment.amount
-                  : item.withdrawal.amount}
+                <Amounts item={item} idx={idx} />
               </div>
               <div className="font-meduim  ml-2 text-xs">
                 {formatDate(item.createdAt)}

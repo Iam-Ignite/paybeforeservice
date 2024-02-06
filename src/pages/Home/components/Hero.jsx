@@ -15,6 +15,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ShopContext } from "../../../utils/contextShop";
 import Showdownload from "../../../components/Download/Showdownload";
 import Notify from "../../../components/Notify";
+import { LOCAL_URL, PRODUCTION_URL } from "../../../utils/constants";
+import { makeCall } from "../../../utils/makeCall";
 
 const Hero = () => {
   const [transactModalOpen, setTransactModalOpen] = useState(false);
@@ -31,23 +33,22 @@ const Hero = () => {
     bank: "",
     expiration: "",
   });
+  const [repeatPayment, setRepeatPayment] = useState({});
   const [socketRecieved, setSocketReceived] = useState(false);
   const [socketData, setSocketData] = useState({
-    // type: "Payment",
+    // type: 'Payment',
     // payment: {
-    //   created: "2023-12-21T18:09:52.109169776Z",
-    //   sender: {
-    //     account_number: "11128393",
-    //     account_name: "Hey there",
-    //   },
-    //   amount: 200,
+    //   sender: { account_number: undefined, account_name: 'Bloc Simulation' },
+    //   amount: 200
     // },
-    // status: "failed",
-    // reason: "incomplete amount",
-    // infoR: 11234,
-    // id: "AXBBD3",
-    // reciever: "658f31375d464114e2109860",
-    // createdAt: "2023-11-09T02:56:52.958+00:00",
+    // status: 'success',
+    // amount_created: 200,
+    // amount_paid: 200,
+    // id: 'HODEPH',
+    // transfer_id: 'ref_65563ea1c65b5aecc4a780e4',
+    // reciever:  "65929731f1bfbb2d89b01710",
+    // createdAt: '2023-11-16T16:09:06.005075343Z',
+    // infoR: 125181
   });
   const [confettiActive, setConfettiActive] = useState(false);
   const {
@@ -83,26 +84,26 @@ const Hero = () => {
     //production  https://paybeforeservice.onrender.com
     //local   http://localhost:8000
 
-    const endpoint = `https://paybeforeservice.onrender.com/PayBeforeService/v1/payment/verifyPayment/${token}`;
+    const endpoint = `${PRODUCTION_URL}/payment/verifyPayment/${token}`;
 
     try {
-      const response = await axios.get(endpoint);
+      const response = await makeCall(endpoint, {}, {}, "get");
 
       // Check the response status and handle it accordingly
-      if (response.data.status) {
-        console.log(response.data, "checking something");
+      if (response.status) {
+        // console.log(response.data, "checking something");
         setLoading(!true);
         setResponseRecieved(true);
         setPaymentDetails({
-          amount: response.data.data.amount,
-          payId: response.data.data.payId,
-          accountId: response.data.data.accountId,
-          accountName: response.data.data.accountName,
-          accountNumber: response.data.data.accountNumber,
-          bank: response.data.data.bank,
-          expiration: response.data.data.expiration,
+          amount: response.data.amount,
+          payId: response.data.payId,
+          accountId: response.data.accountId,
+          accountName: response.data.accountName,
+          accountNumber: response.data.accountNumber,
+          bank: response.data.bank,
+          expiration: response.data.expiration,
         });
-        setErrMsg(response.data.message);
+        setErrMsg(response.message);
         setTransactModalOpen(true);
 
         // Handle other success scenarios if needed
@@ -110,6 +111,7 @@ const Hero = () => {
         console.log("Request failed with status:", response.status);
         // Handle the failed response
         setErrMsg(response.data.message);
+        setRepeatPayment(rsponse?.data);
         setLoading(!true);
       }
     } catch (error) {
@@ -118,6 +120,61 @@ const Hero = () => {
       setLoading(!true);
 
       // Handle other errors
+    }
+  };
+
+  const remakePayment = async () => {
+
+    setLoading(true);
+    const endpoint = `${PRODUCTION_URL}/payment/remakePayment`;
+    // console.log( socketData, "Oya na" );
+    const data = {
+      amount: parseFloat(repeatPayment.amount_created) - parseFloat(repeatPayment.amount_paid),
+      payment_id: socketData.id,
+    };
+    const headers = {
+         "Content-Type": "application/json",
+    }
+
+    try {
+      const response = await makeCall(endpoint, data, headers, "post")
+
+      console.log(response, "checking response");
+
+      if (response.status) {
+        console.log("one one");
+        setLoading(false);
+        setSocketReceived(false);
+        // const res = await response.json();
+        setPaymentDetails({
+          amount: response.data.amount,
+          payId: response.data.payId,
+          accountId: response.data.accountId,
+          accountName: response.data.accountName,
+          accountNumber: response.data.accountNumber,
+          bank: response.data.bank,
+          expiration: response.data.expiration,
+        });
+        setSocketData({});
+      } else {
+        // const res = await response.json();
+        // console.log(res, "one two");
+        // Handle error responses
+        setLoading(false);
+        setNotify(true);
+        setNotifyType("warn");
+        setNotifymsg(response.message);
+        return;
+      }
+    } catch (error) {
+      console.log("three one");
+
+      // setLoading(false);
+
+      // setNotify(true);
+      // setNotifyType("warn");
+      // setNotifymsg(error);
+      // Handle any network or other errors
     }
   };
 
@@ -175,7 +232,9 @@ const Hero = () => {
         // Connect to the server
         //production  https://paybeforeservice.onrender.com
         //local
-        socket = io.connect("https://paybeforeservice.onrender.com");
+        const live= "https://paybeforeservice.onrender.com";
+        const local = "http://localhost:8000/"
+        socket = io.connect(live);
 
         // Log that the connection is being attempted
         console.log("Attempting to connect to the server...");
@@ -273,10 +332,13 @@ const Hero = () => {
                 <button
                   className="bg-primary px-2 py-4 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
                   onClick={() => {
-                    getPayment();
+                    errMsg === "Payment is incompleted" ?
+                    remakePayment()
+                    :
+                    getPayment()
                   }}
                 >
-                  {loading ? "loading" : "Continue"}
+                  {loading ? "loading" : errMsg === "Payment is incompleted" ? "Complete" : "Continue"}
                 </button>
                 <button
                   onClick={() => openDispute()}
@@ -297,8 +359,11 @@ const Hero = () => {
             paymentDetails={paymentDetails}
             _closeModal={handleCloseModal}
             socketRecieved={socketRecieved}
+            setSocketReceived={setSocketReceived}
             socketData={socketData}
             openDispute={openDispute}
+            setPaymentDetails={setPaymentDetails}
+            setSocketData={setSocketData}
           />
         </div>
       )}
