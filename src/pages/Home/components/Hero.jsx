@@ -110,8 +110,8 @@ const Hero = () => {
       } else {
         console.log("Request failed with status:", response.status);
         // Handle the failed response
-        setErrMsg(response.data.message);
-        setRepeatPayment(rsponse?.data);
+        setErrMsg(response.message);
+        setRepeatPayment(response?.data);
         setLoading(!true);
       }
     } catch (error) {
@@ -217,6 +217,7 @@ const Hero = () => {
   const queryLink = searchParams.get("payment"); // get query param value
 
   useEffect(() => {
+    console.log(errMsg, "errMsg");
     if (query) {
       localStorage.setItem("ref", query);
     }
@@ -270,7 +271,7 @@ const Hero = () => {
         console.error("Error connecting to the server:", error);
       }
     }
-  }, [token, responseRecieved, confettiActive]);
+  }, [token, responseRecieved, confettiActive, errMsg]);
 
   return (
     <>
@@ -338,7 +339,7 @@ const Hero = () => {
                     getPayment()
                   }}
                 >
-                  {loading ? "loading" : errMsg === "Payment is incompleted" ? "Complete" : "Continue"}
+                  {loading ? "loading" : errMsg === "Payment is incomplete" ? "Complete" : "Continue"}
                 </button>
                 <button
                   onClick={() => openDispute()}

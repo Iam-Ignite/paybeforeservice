@@ -141,8 +141,8 @@ export default function Showdownload() {
                 <div className="">Account name</div>
                 <div className="">
                   {toDownload.type === "Payment"
-                    ? toDownload.payment.sender.account_name
-                    : toDownload.withdrawal.reciever.account_name}
+                    ? toDownload?.payment?.sender?.account_name
+                    : toDownload?.withdrawal?.reciever?.account_name}
                 </div>
               </div>
 
@@ -170,7 +170,7 @@ export default function Showdownload() {
                   </div>
                   <div className="w-100 flex justify-between">
                     <div className="">Payment made</div>
-                    <div className="">{formatDate(toDownload.createdAt)}</div>
+                    <div className="">{formatDate(toDownload?.payment?.payment_recieved)}</div>
                   </div>
                 </>
               ) : (

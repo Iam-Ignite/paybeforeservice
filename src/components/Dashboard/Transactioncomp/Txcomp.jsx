@@ -124,7 +124,7 @@ export const TxCancel = ({ data }) => {
 
 export const TxDownload = ({ data }) => {
   const { setToDownload, setShowDownload } = useContext(ShopContext);
-
+   console.log(data, "checks and opinion");
   return (
     <div
       onClick={() => {
