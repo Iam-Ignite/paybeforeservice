@@ -20,7 +20,6 @@ import { makeCall } from "../../../utils/makeCall";
 
 const Hero = () => {
   const [transactModalOpen, setTransactModalOpen] = useState(false);
-  const [token, setToken] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [responseRecieved, setResponseRecieved] = useState(false);
@@ -41,9 +40,9 @@ const Hero = () => {
     //   sender: { account_number: undefined, account_name: 'Bloc Simulation' },
     //   amount: 200
     // },
-    // status: 'success',
+    // status: 'incomplete',
     // amount_created: 200,
-    // amount_paid: 200,
+    // amount_paid: 100,
     // id: 'HODEPH',
     // transfer_id: 'ref_65563ea1c65b5aecc4a780e4',
     // reciever:  "65929731f1bfbb2d89b01710",
@@ -51,6 +50,12 @@ const Hero = () => {
     // infoR: 125181
   });
   const [confettiActive, setConfettiActive] = useState(false);
+
+  //get payment flow
+  const [infoProcess, setInfoProcess] = useState(1); //here we track the information we are to collect in this case email and token
+  const [senderEmail, setSenderEmail] = useState("");
+  const [token, setToken] = useState("");
+
   const {
     notify,
     showDownload,
@@ -130,7 +135,7 @@ const Hero = () => {
     // console.log( socketData, "Oya na" );
     const data = {
       amount: parseFloat(repeatPayment.amount_created) - parseFloat(repeatPayment.amount_paid),
-      payment_id: socketData.id,
+      payment_id: token,
     };
     const headers = {
          "Content-Type": "application/json",
@@ -142,9 +147,8 @@ const Hero = () => {
       console.log(response, "checking response");
 
       if (response.status) {
-        console.log("one one");
-        setLoading(false);
-        setSocketReceived(false);
+        setLoading(!true);
+        setResponseRecieved(true);
         // const res = await response.json();
         setPaymentDetails({
           amount: response.data.amount,
@@ -155,7 +159,8 @@ const Hero = () => {
           bank: response.data.bank,
           expiration: response.data.expiration,
         });
-        setSocketData({});
+        setErrMsg(response.message);
+        setTransactModalOpen(true);
       } else {
         // const res = await response.json();
         // console.log(res, "one two");
@@ -177,6 +182,52 @@ const Hero = () => {
       // Handle any network or other errors
     }
   };
+
+  const sendSenderEmail = async () => {
+    if (senderEmail === "") {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Add a correct email");
+      return;
+    }
+    setLoading(true);
+    //production  https://paybeforeservice.onrender.com
+    //local   http://localhost:8000
+
+    const endpoint = `${PRODUCTION_URL}/payment/sender_email`;
+    const data = {
+      payment_id: token,
+      email: senderEmail,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    }
+
+    try {
+      const response = await makeCall(endpoint, data, headers, "get");
+
+      // Check the response status and handle it accordingly
+      if (response.status) {
+        // console.log(response.data, "checking something");
+        setLoading(false);
+
+        setInfoProcess(2);
+
+        // Handle other success scenarios if needed
+      } else {
+        console.log("Request failed with status:", response.status);
+        // Handle the failed response
+        setErrMsg(response.message);
+        setRepeatPayment(response?.data);
+        setLoading(!true);
+      }
+    } catch (error) {
+      console.log(error);
+      setErrMsg(error.message);
+      setLoading(!true);
+      // Handle other errors
+    }
+  }
 
   const handleCloseModal = (closeModal) => {
     setTransactModalOpen(closeModal);
@@ -316,13 +367,24 @@ const Hero = () => {
             </h2>
             <div className="flex flex-col gap-5">
               <div className="border-ui-border rounded-[10px] px-5 py-4 bg-base">
-                <input
+                {
+                  infoProcess === 1 ?
+                  <input
                   type="text"
                   defaultValue={token}
                   placeholder="Enter transaction id"
                   onChange={(e) => setToken(e.target.value)}
                   className="text-[0.875rem] font-ui-semi w-full border-none outline-none bg-transparent"
                 />
+                :
+                <input
+                  type="text"
+                  defaultValue={senderEmail}
+                  placeholder="Enter Email"
+                  onChange={(e) => setSenderEmail(e.target.value)}
+                  className="text-[0.875rem] font-ui-semi w-full border-none outline-none bg-transparent"
+                />
+                }
               </div>
               {errMsg && (
                 <div className="text-[#cc3300] font-semibold mb-2 text-xs">
@@ -333,13 +395,15 @@ const Hero = () => {
                 <button
                   className="bg-primary px-2 py-4 rounded-[10px] text-white font-ui-bold text-[16px] border-none"
                   onClick={() => {
-                    errMsg === "Payment is incompleted" ?
-                    remakePayment()
+                    errMsg === "Payment is incomplete" ?
+                     remakePayment()
+                    : infoProcess == 1 ?
+                     setInfoProcess(2)
                     :
-                    getPayment()
+                     getPayment()
                   }}
                 >
-                  {loading ? "loading" : errMsg === "Payment is incomplete" ? "Complete" : "Continue"}
+                  {loading ? "loading" : errMsg === "Payment is incomplete" ? "Complete" : infoProcess == 1 ? "Enter token" : "Continue"}
                 </button>
                 <button
                   onClick={() => openDispute()}

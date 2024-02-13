@@ -1,5 +1,7 @@
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import { formatDate } from "../../utils/constants";
+import { ShopContext } from "../../utils/contextShop";
+
 
 export default function TransactionDispute({
   disputeData,
@@ -30,7 +32,7 @@ export default function TransactionDispute({
         ? disputeData?.payment?.sender.account_name
         : disputeData.amount_paid
     );
-  }, [third]);
+  }, []);
 
   const setRefundAfterTx = (e) => {
     if (clienttx) {
