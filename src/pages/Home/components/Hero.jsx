@@ -78,7 +78,7 @@ const Hero = () => {
   // infoR: 11234,
   // id: "100004231221180940109805574676",
 
-  const getPayment = async () => {
+  const checkPaymentLink = async () => {
     if (token === "") {
       setNotify(true);
       setNotifyType("warn");
@@ -97,20 +97,13 @@ const Hero = () => {
       // Check the response status and handle it accordingly
       if (response.status) {
         // console.log(response.data, "checking something");
-        setLoading(!true);
-        setResponseRecieved(true);
-        setPaymentDetails({
-          amount: response.data.amount,
-          payId: response.data.payId,
-          accountId: response.data.accountId,
-          accountName: response.data.accountName,
-          accountNumber: response.data.accountNumber,
-          bank: response.data.bank,
-          expiration: response.data.expiration,
-        });
-        setErrMsg(response.message);
-        setTransactModalOpen(true);
-
+        if(response.data.email) {
+          setLoading(false);
+          setInfoProcess(0);
+        } else {
+          setLoading(false);
+          setInfoProcess(2);
+        }
         // Handle other success scenarios if needed
       } else {
         console.log("Request failed with status:", response.status);
@@ -131,6 +124,7 @@ const Hero = () => {
   const remakePayment = async () => {
 
     setLoading(true);
+    setSocketReceived(false); //lets shut it down first
     const endpoint = `${PRODUCTION_URL}/payment/remakePayment`;
     // console.log( socketData, "Oya na" );
     const data = {
@@ -183,6 +177,56 @@ const Hero = () => {
     }
   };
 
+  const completePaymentissuing = async () => {
+    if (token === "") {
+      setNotify(true);
+      setNotifyType("warn");
+      setNotifymsg("Token cannot be empty");
+      return;
+    }
+    setLoading(true);
+    //production  https://paybeforeservice.onrender.com
+    //local   http://localhost:8000
+
+    const endpoint = `${PRODUCTION_URL}/payment/verifyPayment/${token}`;
+
+    try {
+      const response = await makeCall(endpoint, {}, {}, "get");
+
+      // Check the response status and handle it accordingly
+      if (response.status) {
+        // console.log(response.data, "checking something");
+        setLoading(!true);
+        setResponseRecieved(true);
+        setPaymentDetails({
+          amount: response.data.amount,
+          payId: response.data.payId,
+          accountId: response.data.accountId,
+          accountName: response.data.accountName,
+          accountNumber: response.data.accountNumber,
+          bank: response.data.bank,
+          expiration: response.data.expiration,
+        });
+        setErrMsg(response.message);
+        setTransactModalOpen(true);
+
+        // Handle other success scenarios if needed
+      } else {
+        console.log("Request failed with status:", response.status);
+        // Handle the failed response
+        setErrMsg(response.message);
+        setRepeatPayment(response?.data);
+        setLoading(!true);
+      }
+    } catch (error) {
+      console.log(error);
+      setErrMsg(error.message);
+      setLoading(!true);
+
+      // Handle other errors
+    }
+  } 
+
   const sendSenderEmail = async () => {
     if (senderEmail === "") {
       setNotify(true);
@@ -204,14 +248,14 @@ const Hero = () => {
     }
 
     try {
-      const response = await makeCall(endpoint, data, headers, "get");
+      const response = await makeCall(endpoint, data, headers, "post");
 
       // Check the response status and handle it accordingly
       if (response.status) {
-        // console.log(response.data, "checking something");
+        console.log(response.data, "checking something");
         setLoading(false);
-
-        setInfoProcess(2);
+        
+        setInfoProcess(0);
 
         // Handle other success scenarios if needed
       } else {
@@ -274,7 +318,7 @@ const Hero = () => {
     }
     if (queryLink) {
       setToken(queryLink);
-      getPayment();
+      checkPaymentLink();
     }
 
     let socket; // Declare socket outside of the try block to access it in the cleanup function
@@ -363,7 +407,7 @@ const Hero = () => {
         <div className="right-side self-center flex-[1] max-w-[545px] sm:w-full sm:mb-[60px] lg:flex-1 xl:w-[545px]">
           <div className=" bg-white rounded-[20px] px-[30px] py-[30px] sm:px-[15px] border-ui-border border-border">
             <h2 className="mb-[30px] text-center font-ui-semi text-[16px]">
-              Enter Transaction ID
+               {infoProcess === 0 ? "Get Details" : infoProcess === 1 ? " Enter Token" : "Enter Email"}
             </h2>
             <div className="flex flex-col gap-5">
               <div className="border-ui-border rounded-[10px] px-5 py-4 bg-base">
@@ -398,12 +442,14 @@ const Hero = () => {
                     errMsg === "Payment is incomplete" ?
                      remakePayment()
                     : infoProcess == 1 ?
-                     setInfoProcess(2)
-                    :
-                     getPayment()
+                     checkPaymentLink()
+                    : infoProcess == 2 ?
+                     sendSenderEmail()
+                     :
+                    completePaymentissuing()
                   }}
                 >
-                  {loading ? "loading" : errMsg === "Payment is incomplete" ? "Complete" : infoProcess == 1 ? "Enter token" : "Continue"}
+                  {loading ? "loading" : errMsg === "Payment is incomplete" ? "Complete" : infoProcess == 1 ? "Enter Token" : infoProcess == 2 ? "Enter Email" : "Make Payment"}
                 </button>
                 <button
                   onClick={() => openDispute()}
