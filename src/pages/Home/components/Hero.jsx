@@ -328,9 +328,9 @@ const Hero = () => {
         // Connect to the server
         //production  https://paybeforeservice.onrender.com
         //local
-        const live= "https://paybeforeservice.onrender.com";
+        const live = "https://paybeforeservice.onrender.com";
         const local = "http://localhost:8000/"
-        socket = io.connect(local);
+        socket = io.connect(live);
 
         // Log that the connection is being attempted
         console.log("Attempting to connect to the server...");
