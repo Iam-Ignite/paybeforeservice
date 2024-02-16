@@ -153,12 +153,12 @@ const Hero = () => {
           bank: response.data.bank,
           expiration: response.data.expiration,
         });
-        setErrMsg(response.message);
         setTransactModalOpen(true);
       } else {
         // const res = await response.json();
         // console.log(res, "one two");
         // Handle error responses
+        // setErrMsg(response.message);
         setLoading(false);
         setNotify(true);
         setNotifyType("warn");
@@ -330,7 +330,7 @@ const Hero = () => {
         //local
         const live= "https://paybeforeservice.onrender.com";
         const local = "http://localhost:8000/"
-        socket = io.connect(live);
+        socket = io.connect(local);
 
         // Log that the connection is being attempted
         console.log("Attempting to connect to the server...");
@@ -475,6 +475,7 @@ const Hero = () => {
             openDispute={openDispute}
             setPaymentDetails={setPaymentDetails}
             setSocketData={setSocketData}
+            setResponseRecieved={setResponseRecieved}
           />
         </div>
       )}

@@ -17,7 +17,8 @@ const TransactModal = ({
   socketData,
   openDispute,
   setPaymentDetails,
-  setSocketData
+  setSocketData,
+  setResponseRecieved
 }) => {
   const [closeModal, setCloseModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,7 @@ const TransactModal = ({
   const remakePayment = async () => {
 
     setLoading(true);
+    setResponseRecieved(false);
 
     const endpoint = `${PRODUCTION_URL}/payment/remakePayment`;
     // console.log( socketData, "Oya na" );
@@ -88,6 +90,7 @@ const TransactModal = ({
           expiration: response.data.expiration,
         });
         setSocketData({});
+        setResponseRecieved(true);
       } else {
         // const res = await response.json();
         // console.log(res, "one two");
